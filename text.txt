@@ -1,0 +1,196 @@
+
+
+//PRODUCTOS 
+const [Id_producto, setId_producto] = useState("")
+const [nombre_producto, setNombreProducto] = useState("")
+const [descripcion_producto, setDescripcionProducto] = useState("")
+const [precio_producto, setPrecioProducto] = useState("")
+const [cantidad_producto, setCantidadProducto] = useState("")
+
+//VENTA
+const [Id_venta, setIdVenta] = useState("")
+const [drescripcion_venta, setDescripcion_venta] = ("")
+const [precioTotal_venta, setPrecioTotal] = ("")
+
+//CLIENTES
+const [Id_cliente, setIdCliente] = useState("")
+const [nombre_cliente, setNombre_cliente] = useState("")
+const [apellido_cliente, setApellido_cliente] = useState("")
+const [telefono_cliente, setTelefonoCliente] = useState("")
+const [correo_cliente, setCorreoCliente] = useState("")
+const [codigoPostal_cliente, setCodigoPostal] = useState("")
+const [domicilio_cliente, setDomicilio_cliente] = useState("")
+const [ciudad_cliente, setCiudad_cliente] = useState("")
+
+  // const AgregarProducto = () => {
+  //   axios.get(`http://localhost:3001/productos`).then((response) => {
+  //     const product = response.data;
+  
+  //     if (product) {
+  //       const nuevoProducto = {
+  //         Id_producto: product[0].Id_producto, 
+  //         nombre_producto: product[0].nombre_producto, 
+  //         descripcion_producto: product[0].descripcion_producto, 
+  //         precio_producto: product[0].precio_producto, 
+  //         cantidad_producto: product[0].cantidad_producto, 
+  //         subTotal: product[0].precio_producto * product.cantidad_producto 
+  //       };
+  //       setProductosList([...productosList, nuevoProducto]);
+  //     } else {
+  //       console.log('ERROR NO EXISTE ');
+  //     }
+  //   });
+  // };
+
+
+
+
+
+    //CLIENTES
+    // const [Id_cliente, setIdCliente] = useState("")
+    // const [nombre_cliente, setNombre_cliente] = useState("")
+    // const [apellido_cliente, setApellido_cliente] = useState("")
+    // const [telefono_cliente, setTelefonoCliente] = useState("")
+    // const [correo_cliente, setCorreoCliente] = useState("")
+    // const [codigoPosta_cliente, setCodigoPostal] = useState("")
+
+
+
+    //DETALLE VENTA
+    // const [Id_detalleVenta, setId_detalleVenta] = useState ("")
+    // const [Id_metodoPago, setId_metodoPago] = useState("")
+    // const [ventasTotales_detalleVenta, setventasTotales_detalleVenta] =useState ("")
+    // const [ganacia_detalleVenta, setGanacia_detalleVenta] =useState ("")
+    // const [descripcion_detalleVenta, setDescripcion_detalleVenta] = useState("")
+
+
+
+    //ELIMINAR 
+
+    
+    const eliminarProducto = (id) => {
+      const arrayNuevo = productosList.filter((producto)=> producto.Id_producto !== id)
+      console.log(arrayNuevo)
+      setProductosList(arrayNuevo)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /// ULTIMO COMPONENTE ANTES DEL CONTEXT 
+
+     // Estados
+  const [productosList, setProductosList] = useState([]);
+  const [Id_producto, setId_producto] = useState("");
+  const [nombre_producto, setNombreProducto] = useState("");
+  const [precio_producto, setPrecioProducto] = useState("");
+  const [cantidad_producto, setCantidadProducto] = useState("");
+  const [productoSeleccionado, setProductoSeleccionado] = useState("");
+  const [descripcion_producto, setDescripcion_producto] = useState("");
+  const [verListado, setVerListado] = useState([])
+
+  // Función para cargar un producto por su nombre
+  const cargarProducto = (val) => {
+    setId_producto(val.Id_producto);
+    setNombreProducto(val.nombre_producto);
+    setPrecioProducto(val.precio_producto);
+    setCantidadProducto(val.cantidad_producto);
+  };
+
+
+  const handleAgregar = () => {
+    const existeProducto = productosList.find(
+      (producto) => producto.Id_producto === Id_producto
+    );
+    if (existeProducto) {
+      const productosActualizados = productosList.map((producto) => {
+        if (producto.Id_producto === Id_producto) {
+          return {
+            ...producto,
+            cantidad_producto:
+              Number(producto.cantidad_producto) + Number(cantidad_producto),
+          };
+        }
+        return producto;
+      });
+      setProductosList(productosActualizados);
+    } else {
+      const nuevoProducto = {
+        Id_producto,
+        nombre_producto,
+        precio_producto,
+        cantidad_producto,
+      };
+      setProductosList([...productosList, nuevoProducto]);
+    }
+  };
+
+
+  const AgregarProducto = (e) => {
+    if (e.key === "Enter") {
+      axios
+        .get(
+          `http://localhost:3001/productos?nombre_producto=${nombre_producto}`
+        )
+        .then((response) => {
+          const productoEncontrado = response.data;
+
+          if (productoEncontrado) {
+            setId_producto(productoEncontrado.Id_producto);
+            setNombreProducto(productoEncontrado.nombre_producto);
+            setPrecioProducto(productoEncontrado.precio_producto);
+            setCantidadProducto(productoEncontrado.cantidad_producto);
+          } else {
+            console.log("ERROR NO EXISTE ");
+          }
+        });
+    }
+  };
+
+  const verListaConProductos = () =>{
+    axios.get("http://localhost:3001/productos").then((response)=>{
+      setVerListado(response.data)
+      console.log(response.data)
+    })
+  }
+  const handleSeleccionarProducto = (producto) => {
+    setProductoSeleccionado(producto);
+  };
+
+  // Efecto para cargar el producto seleccionado
+  useEffect(() => {
+    verListaConProductos()
+
+  }, []);
+  useEffect(()=>{
+    productoSeleccionado!=null ? cargarProducto(productoSeleccionado) : setNombreProducto("")
+   },[productoSeleccionado])
+ 
+
+
+//FUNCIONES KEYDOWN 
+
+const manejarKeyDown = (event) => {
+  // Verificar si la tecla presionada es la tecla Enter (código 13)
+  if (event.key === 'Enter') {
+    console.log('Se presionó la tecla f11: ');
+    // Aquí puedes realizar cualquier acción que desees al presionar Enter
+    // Por ejemplo, enviar un formulario, ejecutar una función, etc.
+  }
+};
+
+useEffect(()=>{
+  document.addEventListener('keydown', manejarKeyDown, true)
+},[])
+
+
+onKeyDown={manejarKeyDown}
