@@ -194,3 +194,205 @@ useEffect(()=>{
 
 
 onKeyDown={manejarKeyDown}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////import { useState, useEffect } from 'react';
+
+
+
+import axios from 'axios';
+import { Button } from 'react-bootstrap';
+import Productos from '../components/Productos.jsx';
+import * as XLSX from 'xlsx';
+import useScanDetection from 'use-scan-detection';
+
+const NuevoProduct = ({ filename, sheetname }) => {
+    const [ver, setVer] = useState([]);
+    const [nombre_producto, setnombre_Producto] = useState('');
+    const [descripcion_producto, setdescripcion_Producto] = useState('');
+    const [precioCompra, setPrecioCompra] = useState('');
+    const [precioVenta, setPrecioVenta] = useState('');
+    const [cantidad_producto, setcantidad_Producto] = useState('');
+    const [Id_categoria, setId_categoria] = useState('');
+    const [tipoVenta, setTipoVenta] = useState('unidad'); // Agregado para seleccionar el tipo de venta
+    const id_sucursal = localStorage.getItem('sucursalId');
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/productos/sucursal/${id_sucursal}`)
+            .then((response) => {
+                setVer(response.data);
+            })
+            .catch((error) => {
+                console.log('Error al obtener los productos:', error);
+            });
+    }, [id_sucursal]);
+
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(ver);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, sheetname);
+        XLSX.writeFile(wb, `${filename}.xlsx`);
+    };
+
+    const crearProductos = () => {
+        axios.post("http://localhost:3001/productos/post",
+            {
+                nombre_producto,
+                descripcion_producto,
+                precioCompra,
+                precioVenta,
+                cantidad_producto,
+                Id_categoria,
+                tipoVenta, // Ahora se incluye el tipo de venta en la petición
+                Id_sucursal: id_sucursal
+            })
+            .then(() => {
+                alert('producto creado con éxito');
+            })
+            .catch(() => {
+                console.log('Error al crear el producto:');
+            });
+    };
+
+    const [value, setValue] = useState("");
+
+    useScanDetection({
+        onComplete: setValue,
+        minLength: 15
+    });
+
+    return (
+        <>
+            <Productos /><br />
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col">
+                        Nombre: <input type="text" value={nombre_producto} onChange={(e) => setnombre_Producto(e.target.value)} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        Descripcion: <input type="text" value={descripcion_producto} onChange={(e) => setdescripcion_Producto(e.target.value)} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        Precio costo: <input type="text" value={precioCompra} onChange={(e) => setPrecioCompra(e.target.value)} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        Precio venta: <input type="text" value={precioVenta} onChange={(e) => setPrecioVenta(e.target.value)} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        Cantidad: <input type="text" value={cantidad_producto} onChange={(e) => setcantidad_Producto(e.target.value)} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        Departamento: <input type="text" value={Id_categoria} onChange={(e) => setId_categoria(e.target.value)} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        Tipo de venta:
+                        <select value={tipoVenta} onChange={(e) => setTipoVenta(e.target.value)}>
+                            <option value="unidad">Unidad</option>
+                            <option value="granel">Granel</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <Button className="btn btn-success" onClick={crearProductos}>Guardar Producto</Button>
+                    </div>
+                </div>
+            </div>
+            <table className='table table-striped table-hover mt-5 shadow-lg'>
+                <thead>
+                    <tr className='table-info'>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Descripcion</th>
+                        <th>Precio costo</th>
+                        <th>Precio venta</th>
+                        <th>Cantidad</th>
+                        <th>Departamento</th>
+                        <th>Fecha de creacion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        ver.map((val) => (
+                            <tr key={val.Id_producto}>
+                                <td>{val.Id_producto}</td>
+                                <td>{val.nombre_producto}</td>
+                                <td>{val.descripcion_producto}</td>
+                                <td>{val.precioCompra}</td>
+                                <td>{val.precioVenta}</td>
+                                <td>{val.cantidad_producto}</td>
+                                <td>{val.nombre_categoria}</td>
+                                <td>{new Date(val.fecha_registro).toISOString().slice(0, 10)}</td>
+                            </tr>
+                        ))
+                    }
+                </tbody>
+            </table>
+            <button onClick={exportToExcel}>Exportar a Excel</button>
+        </>
+    );
+};
+
+export default NuevoProduct;
+
+                                      <button 
+                                      className="btn btn-ouline-primary" 
+                                      onClick={()=> disminuirCantidad(productos.Id_producto)}
+                                      >-</button>
+                                      <button className="btn btn-primary">{productos.cantidad_producto}</button>
+                                      <button 
+                                      className="btn btn-ouline-primary" 
+                                      onClick={ () => aumentarCantidad(productos.Id_producto)}
+                                      >+</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        <label htmlFor="nombre_sucursal">Nombre de Sucursal:</label>
+      <input type="text" id="nombre_sucursal" value={nombre_sucursal} onChange={(e) => setNombre_sucursal(e.target.value)} />
+      <label htmlFor="clave">Contraseña:</label>
+      <input type="password" id="clave" value={clave} onChange={(e) => setClave(e.target.value)} />
+      <button onClick={comprobarLogin}>Login</button>
+
+
+
+
+
+
+
+
+      
+                <div className="row">
+                    <div className="col">
+                        Tipo de venta:
+                        <select value={tipo_venta} onChange={(e) => setTipoVenta(e.target.value)}>
+                            <option value="unidad">Unidad</option>
+                            <option value="granel">Granel gr</option>
+                        </select>
+                    </div>
+                </div>

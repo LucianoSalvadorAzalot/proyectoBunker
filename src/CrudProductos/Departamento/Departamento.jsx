@@ -1,7 +1,10 @@
 import { Button } from "react-bootstrap"
 import Productos from "../../components/Productos"
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import {
+  MDBInputGroup,
+} from 'mdb-react-ui-kit';
 
 
 const Departamento = () => {
@@ -76,34 +79,27 @@ const Departamento = () => {
   return (
     <>
     
-    <Productos/>
+    <Productos/> <br />
         <div className="Container-fluid">
             <div className= "row">
                 <div className= "col">
                      <h2>Departamentos:</h2>   
                 </div>
-            </div>
-            {/* <div className= "row">
-                <div className= "col">
-                     ID <input type="text" value={Id_categoria} onChange={(e)=> setIdCategoria(e.target.value)}/>
-                </div>
-            </div> */}
+            </div><br />
+            <MDBInputGroup textBefore='📋'   className='mb-3'>
+            <input className='form-control' type='text' placeholder="Nombre"  value={nombre_categoria} onChange={(e)=> setNombreCategoria(e.target.value)} />
+          </MDBInputGroup>
+
+          <MDBInputGroup textBefore='📋' className='mb-3' >
+            <input className='form-control' type='text' placeholder="Descripcion" value={descripcion_categoria} onChange={(e)=> setdescripcionCategoria(e.target.value)} />
+          </MDBInputGroup>
+         
             <div className= "row">
                 <div className= "col">
-                     Nombre <input type="text" value={nombre_categoria} onChange={(e)=> setNombreCategoria(e.target.value)}/>
-                </div>
-            </div>
-            <div className= "row">
-                <div className= "col">
-                    Descripcion <input type="text" value={descripcion_categoria} onChange={(e)=> setdescripcionCategoria(e.target.value)}/>  
-                </div>
-            </div>
-            <div className= "row">
-                <div className= "col">
-                  <Button onClick={crearCategoria}>Crear Categoria</Button>  
+                  <Button className="btn btn-success" onClick={crearCategoria}>Crear Categoria</Button>  
                 </div>            
                 <div className= "col">
-                  <Button onClick={editarCategoria}>Confirmar Edicion</Button>  
+                  <Button className="btn btn-warning"  onClick={editarCategoria}>Confirmar Edicion</Button>  
                 </div>       
                 
             </div>
@@ -114,17 +110,19 @@ const Departamento = () => {
         <div className="container">
           <div className="row">
             <div className="col">
-              <table>
+              <table className='table table-striped table-hover mt-5 shadow-lg'>
                 <thead>
                     <tr>
                       <th>ID</th>
                       <th>NOMBRE</th>
                       <th>DESCRIPCION</th>
+                      <th>EDITAR</th>
+                      <th>ELIMINAR</th>
                     </tr>
                 </thead>
                 <tbody>
                  {
-                  verCategoria.map((val, index)=>(
+                  verCategoria.map((val)=>(
                     <tr key={val.Id_categoria}>
                       <td>{val.Id_categoria}</td>
                       <td>{val.nombre_categoria}</td>
@@ -133,7 +131,7 @@ const Departamento = () => {
                           <Button onClick={()=>{updateCategoria(val)}}>Ver Categoria</Button>               
                         </td>
                         <td className="col">
-                        <Button onClick={() => eliminarCategoria(val.Id_categoria)}>Eliminar</Button>               
+                        <Button className="btn btn-danger" onClick={() => eliminarCategoria(val.Id_categoria)}>Eliminar</Button>               
                         </td>
                     </tr>
                   ))

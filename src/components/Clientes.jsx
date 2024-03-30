@@ -3,7 +3,9 @@ import App from '../App'
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-
+import {
+  MDBInputGroup,
+} from 'mdb-react-ui-kit';
 
  const Clientes = () =>{
 
@@ -16,21 +18,27 @@ import Swal from 'sweetalert2';
   const[ciudad_cliente,setCiudadCliente] = useState();
   const[codigoPostal_cliente,setCodigoPostal_cliente] = useState();
   const[estado_cliente,setEstadoCliente] = useState();
-  const[ver,setVer] = useState([]);
+  const [montoCredito, setMontoCredito] = useState("")
+
+  
+  
   const[buscar,setBuscar] = useState();
- 
-  const buscador = (e)=>{
+  const[ver,setVer] = useState([]);
+  const buscador = (e) => {
     setBuscar(e.target.value)
   }
   
   let resultado = []
-   if(!buscar)
-   {
-     resultado = ver
-  }else{  
-     resultado = ver.filter((dato) =>
-     dato.nombre_cliente.toLowerCase().includes(buscar.toLocaleLowerCase())) 
-}
+  if (!buscar) {
+    resultado = ver
+  } else {
+    resultado = ver.filter((dato) =>
+      dato.nombre_cliente.toLowerCase().includes(buscar.toLowerCase())
+    )
+  }
+
+
+
 
 
 
@@ -53,7 +61,8 @@ import Swal from 'sweetalert2';
       domicilio_cliente:domicilio_cliente,
       ciudad_cliente:ciudad_cliente,
       codigoPostal_cliente:codigoPostal_cliente,
-      estado_cliente:estado_cliente
+      estado_cliente:estado_cliente,
+      montoCredito: montoCredito
     }).then(()=>{
       verClientes()
       limpiarCampos()
@@ -78,7 +87,8 @@ import Swal from 'sweetalert2';
         domicilio_cliente:domicilio_cliente,
         ciudad_cliente:ciudad_cliente,
         codigoPostal_cliente:codigoPostal_cliente,
-        estado_cliente: estado_cliente
+        estado_cliente: estado_cliente,
+        montoCredito: montoCredito
     }).then(()=>{
         verClientes()
         limpiarCampos()
@@ -128,6 +138,7 @@ const seeClientes = (val) =>{
   setCiudadCliente(val.ciudad_cliente)
   setCodigoPostal_cliente(val.codigoPostal_cliente)
   setEstadoCliente(val.estado_cliente)
+  setMontoCredito(val.montoCredito)
 }
 
 const limpiarCampos = () =>{
@@ -139,6 +150,7 @@ const limpiarCampos = () =>{
   setCiudadCliente('')
   setCodigoPostal_cliente('')
   setEstadoCliente(1)
+  setMontoCredito('')
 }
 
 
@@ -167,46 +179,44 @@ const limpiarCampos = () =>{
         <div className="col-">
           <br /> <br />
           <div className="container-fluid">
-                <div className="row">
-                    <div className="col">
-                        Nombre: <input type="text" value={nombre_cliente} onChange={(e) => setNombreCliente(e.target.value)}/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        Apellidos: <input type="text" value={apellido_cliente} onChange={(e) => setApellidoCliente(e.target.value)}/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        Telefono: <input type="text" value={telefono_cliente} onChange={(e) => setTelefonoCliente(e.target.value)}/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        Correo: <input type="text" value={correo_cliente} onChange={(e) => setCorreoCliente(e.target.value)}/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        Domicilio: <input type="text" value={domicilio_cliente} onChange={(e) => setDomicilioCliente(e.target.value)}/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        Ciudad: <input type="text" value={ciudad_cliente} onChange={(e) => setCiudadCliente(e.target.value)}/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        Codigo Postal: <input type="text" value={codigoPostal_cliente} onChange={(e) => setCodigoPostal_cliente(e.target.value)}/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        Estado: <input type="text" value={estado_cliente} onChange={(e) => setEstadoCliente(e.target.value)}/>
-                    </div>
-                </div>
+          <MDBInputGroup textBefore='👥'  className='mb-3'>
+            <input className='form-control' type='text' placeholder="Nombre"  value={nombre_cliente} onChange={(e) => setNombreCliente(e.target.value)}/>
+          </MDBInputGroup>
+
+          <MDBInputGroup textBefore='👀' className='mb-3' >
+            <input className='form-control' type='text' placeholder="Apellido" value={apellido_cliente} onChange={(e) => setApellidoCliente(e.target.value)}/>
+          </MDBInputGroup>
+
+          <MDBInputGroup textBefore='📞' className='mb-3' >
+            <input className='form-control' type='number' placeholder="Telefono" value={telefono_cliente} onChange={(e) => setTelefonoCliente(e.target.value)}/>
+          </MDBInputGroup>
+          
+          <MDBInputGroup textBefore='@' className='mb-3' >
+            <input className='form-control' type='email' placeholder="Correo" value={correo_cliente} onChange={(e) => setCorreoCliente(e.target.value)}/>
+          </MDBInputGroup>
+
+          <MDBInputGroup  textBefore='🏠' className='mb-3' >
+            <input className='form-control' type='text' placeholder="Domicilio" value={domicilio_cliente} onChange={(e) => setDomicilioCliente(e.target.value)}/>
+          
+          </MDBInputGroup>
+
+          <MDBInputGroup textBefore='🏙' className='mb-3' >
+            <input className='form-control' type='text' placeholder="Ciudad" value={ciudad_cliente} onChange={(e) => setCiudadCliente(e.target.value)}/>
+          </MDBInputGroup>
+
+          <MDBInputGroup className='mb-3' >
+            <input className='form-control' type='text' placeholder="Codigo Postal" value={codigoPostal_cliente} onChange={(e) => setCodigoPostal_cliente(e.target.value)}/>
+          </MDBInputGroup>
+
+          <MDBInputGroup className='mb-3' >
+            <input className='form-control' type='number' placeholder="Estado"  value={estado_cliente} onChange={(e) => setEstadoCliente(e.target.value)}/>
+          </MDBInputGroup>
+
+          <MDBInputGroup  textBefore='$' className='mb-3' textAfter='.00' >
+            <input className='form-control' type='number' placeholder="Credito"  value={montoCredito} onChange={(e) => setMontoCredito(e.target.value)}/>
+          </MDBInputGroup>
+
+
                 <div className="row">
                     <div className="col-2"><br />
                         <Button className="btn btn-info" onClick={agregarClientes}>✔️Guardar Cliente</Button>
@@ -217,6 +227,10 @@ const limpiarCampos = () =>{
                 </div><br /><br />
                 <input value={buscar} onChange={buscador} type="text" placeholder='Busca un cliente...' className='form-control'/>
             </div>
+
+
+
+            
             <table className='table table-striped table-hover mt-5 shadow-lg'>
                 <thead>
                     <tr className='table-success'>
@@ -228,12 +242,14 @@ const limpiarCampos = () =>{
                         <th>Ciudad</th>
                         <th>Codigo Postal</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        <th>Credito</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        resultado.map((val, index) => (
+                        resultado.map((val) => (
                             <tr key={val.Id_cliente}>
                                 <td>{val.nombre_cliente}</td>
                                 <td>{val.apellido_cliente}</td>
@@ -243,10 +259,11 @@ const limpiarCampos = () =>{
                                 <td>{val.ciudad_cliente}</td>
                                 <td>{val.codigoPostal_cliente}</td>
                                 <td>{val.estado_cliente}</td>
-                                <td className='btn-group' role='group' aria-label="Basic example">
+                                <td>{val.montoCredito}</td>
+                                <td className=''  aria-label="Basic example">
                                      <Button type='button' className='btn btn-warning m-2' onClick={()=>{seeClientes(val)}}> EDITAR </Button>
                                 </td>
-                                <td className='btn-group' role='group' aria-label="Basic example">
+                                <td className=''  aria-label="Basic example">
                                      <Button type='button' className='btn btn-danger m-2' onClick={()=>{eliminarCliente(val)}}> ELIMINAR </Button>
                                 </td>
                             </tr>

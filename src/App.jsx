@@ -1,9 +1,16 @@
 import { Link } from 'react-router-dom'
 import './App.css'
-import { Button } from 'react-bootstrap'
 
-function App() {
+
+
+function App(  ) {
  
+
+  const rolUsuario = localStorage.getItem("rolUsuario")
+
+
+
+
 
   return (
     <>
@@ -11,39 +18,64 @@ function App() {
         <div >
           <div className='row'>
         
+         
             <div className='col-xl'>
-            <Link to="/ventas">F1 Ventas</Link>
+            <Link to="/ventas"> Ventas</Link>
+            </div>    
+            <div className='col-xl'>
+            <Link to="/clientes">Clientes</Link>
             </div>
             <div className='col-xl'>
-            <Link to="/creditos">F2 Creditos</Link>
-            </div>
-            <div className='col-xl'>
-            <Link to="/clientes"> Clientes</Link>
-            </div>
-            <div className='col-xl'>
-            <Link to="/productos">F3 Productos </Link>
-            </div>
-            <div className='col-xl'>
-            <Link to="/inventario">F4 Inventario</Link>
+            <Link to="/productos">Productos </Link>
             </div>
             <div className='col-xl'>
             <Link to="/compra">Compras</Link>
             </div>
+            
+            {rolUsuario === 'admin' && (
             <div className='col-xl'>
-            <Link to="/configuracion">Configuracion</Link>
+            <Link to="/usuarios">Usuarios</Link>
             </div>
+            )}
+
+            {rolUsuario === 'admin' && (
             <div className='col-xl'>
-            <Link to="/facturas">Facturas</Link>
+            <Link to="/configuracion">Proveedores</Link>
             </div>
-            <div className='col-xl'>
-            <Link to="/corte">Corte</Link>
-            </div>
-            <div className='col-xl'>
-            <Link to="/reportes">Reportes</Link>
-            </div>
+            )}
+            {rolUsuario === 'admin' && (
+             <div className='col-xl'>
+                <Link to="/metodoPago">Metodo de Pago</Link>
+              </div>
+            )}
+            {rolUsuario === 'admin' && (
+              <div className='col-xl'>
+              <Link to="/corteV">Corte Venta</Link>
+              </div>
+             )}
+
+            {rolUsuario === 'admin' && (
+              <div className='col-xl'>
+              <Link to="/corteC">Corte Compra</Link>
+              </div>
+            )}
+
+            {rolUsuario === 'admin' && (
+                <div className='col-xl'>
+                <Link to="/reportes">Reportes</Link>
+                </div>
+            )}
+
+              <div className='col-xl'>
+                <Link to="/" className="btn btn-danger">🕺 Salir</Link>
+              </div>
+
+           
           </div>
         </div>
+        <hr />
     </section>
+
     </>
   )
 }

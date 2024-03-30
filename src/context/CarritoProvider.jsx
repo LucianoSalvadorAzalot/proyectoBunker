@@ -14,13 +14,13 @@ export const CarritoProvider = ({children}) => {
                 return [...state, action.payload]
             case '[CARRITO] Aumentar Cantidad Compra': 
                 return state.map(item => {
-                    const cant = item.cantidad_producto + 1
+                    const cant = item.cantidad_producto + item.cantidad_producto
                     if(item.Id_producto === action.payload) return {...item, cantidad_producto: cant}
                     return item
                 })
             case '[CARRITO] Disminuir Cantidad Compra': 
             return state.map(item => {
-                const cant = item.cantidad_producto -1
+                const cant = item.cantidad_producto - item.cantidad_producto
                 if(item.Id_producto === action.payload && item.cantidad_producto > 1) return {...item, cantidad_producto: cant}
                 return item
             })

@@ -1,23 +1,30 @@
 export const cliente  = "/clientes"
 export const compra = "/compra"
 export const configuracion = "/configuracion"
-export const corte = "/corte"
+export const corteV = "/corteV"
+export const corteC = "/corteC"
 export const creditos = "/creditos"
 export const facturas = "/facturas"
 export const inventario = "/inventario"
 export const productos = "/productos"
 export const reportes = "/reportes"
 export const ventas = "/ventas"
+export const ventasN = "ventasN"
+export const app = "/app"
+export const metodoPago = "/metodoPago"
+
+export const loginUsuario = "/loginUsuario"
+export const usuarios = "/usuarios"
 
 /*-----------------CRUD PRODUCTOS------------------------------------*/
 
 export const nuevoProducto = "/nuevoProducto"
 export const editarProducto = "/editarProducto"
 export const eliminarProducto = "/eliminarProducto"
-export const catalogo = "/catalogo"
+
 export const departamentos = "/departamentos"
 export const ventaxPeriodo ="/ventasPeriodo"
-
+export const importar = "/importar"
 
 
 /*-----------------INVENTARIO-----------------------------------*/

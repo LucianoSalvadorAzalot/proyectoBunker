@@ -3,7 +3,7 @@ const {connection} = require("../database/config")
 const verDetalleVenta = (req,res) =>{
     connection.query(`SELECT 
                     dv.Id_detalleVenta, dv.descripcion_detalleVenta, dv.ventasTotales_detalleVenta, dv.ganacia_detalleVenta,
-                    p.nombre_producto, p.descripcion_producto, p.precio_producto, p.cantidad_producto,
+                    p.nombre_producto, p.descripcion_producto, p.precioVena, p.cantidad_producto,
                     v.Id_venta
                     FROM DetalleVenta dv
                     INNER JOIN Venta v ON dv.Id_venta = v.Id_venta
@@ -15,12 +15,14 @@ const verDetalleVenta = (req,res) =>{
 }
 
 const crearDetalleVenta = (req, res) => {
+   
     const detalleVentaData = {
         Id_venta: req.body.Id_venta,
         descripcion_detalleVenta: req.body.descripcion_detalleVenta,
         ventasTotales_detalleVenta: req.body.ventasTotales_detalleVenta,
         ganacia_detalleVenta: req.body.ganacia_detalleVenta,
-        Id_producto: req.body.Id_producto
+        Id_producto: req.body.Id_producto,     
+        CantidadVendida: req.body.CantidadVendida       
     };
 
     connection.query("INSERT INTO DetalleVenta SET ?", detalleVentaData, (error, results) => {

@@ -23,15 +23,15 @@ export default function Productos() {
             <div className='col-xl'>
             <Link to="/departamentos">Departamentos</Link>
             </div>
-            <div className='col-xl'>
+            {/* <div className='col-xl'>
             <Link to="/ventasPeriodo">Ventas por periodo</Link>
-            </div>
+            </div> */}
             <div className='col-xl'>
-            <Link to="/">Importar</Link>
+            <Link to="/importar">Importar</Link>
             </div>
-            <div className='col-xl'>
+            {/* <div className='col-xl'>
             <Link to="/catalogo">Catalogo</Link>
-            </div>
+            </div> */}
           </div>
 
         </div>

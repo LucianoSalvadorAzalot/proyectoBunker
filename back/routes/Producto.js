@@ -5,6 +5,7 @@ const {verProductos,crearProductos,editarProductos,eliminarProductos,ProductoLis
 
 
 router.get('/productos', verProductos)
+
 router.get('/productos/nombre_producto', ProductoList)
 router.post('/productos/post',crearProductos)
 router.put('/productos/put/:Id_producto',editarProductos)
