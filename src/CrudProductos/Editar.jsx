@@ -7,6 +7,7 @@ import {
   } from 'mdb-react-ui-kit';
   import Form from 'react-bootstrap/Form';
 
+
 const Editar = () => {
     const [ver, setVer] = useState([]);
     const [Id_producto, setId_Producto] = useState('');
@@ -17,7 +18,7 @@ const Editar = () => {
     const [cantidad_producto, setcantidad_Producto] = useState('');
     const [Id_categoria, setId_categoria] = useState('');
     const [tipo_venta, setTipoVenta] = useState('unidad');
-
+    const [categorias, setCategorias] = useState([]);
 
 
     useEffect(()=>{
@@ -47,6 +48,13 @@ const Editar = () => {
         })
     }
 
+    const verCategorias = () =>{
+        axios.get("http://localhost:3001/categorias").then((response)=>{
+            setCategorias(response.data)
+        })
+
+    }
+
 
     const seeProductos = (val) =>{
 
@@ -56,10 +64,13 @@ const Editar = () => {
         setPrecioCompra(val.precioCompra)
         setPrecioVenta(val.precioVenta)
         setcantidad_Producto(val.cantidad_producto)
-        setId_categoria(val.Id_categoria)
+        setId_categoria(val.nombre_categoria)
         setTipoVenta(val.tipo_venta)
     }
 
+    useEffect(()=>{
+        verCategorias()
+    },[])
 
 
   return (
@@ -111,9 +122,13 @@ const Editar = () => {
             <input className='form-control' type='text' placeholder="Cantidad" value={cantidad_producto} onChange={(e) => setcantidad_Producto(e.target.value)}/>
           </MDBInputGroup>
 
-          <MDBInputGroup  textBefore='🛒' className='mb-3' >
-            <input className='form-control' type='text' placeholder="Departamento" value={Id_categoria} onChange={(e) => setId_categoria(e.target.value)} />
-          </MDBInputGroup>
+          <Form.Select  key={Id_categoria} aria-label="Nombre Categoria" id="categoria">
+            {categorias.map((cat)=>   
+                <option key={cat.Id_categoria}>{cat.nombre_categoria}</option>   
+            )}
+        </Form.Select>
+         
+
                 
         </div>
        

@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import Productos from '../components/Productos.jsx';
 import * as XLSX from 'xlsx';
-import useScanDetection from 'use-scan-detection';
 import {
     MDBInputGroup,
   } from 'mdb-react-ui-kit';
@@ -19,6 +18,9 @@ const NuevoProduct = ({ filename, sheetname }) => {
     const [cantidad_producto, setCantidad_Producto] = useState('');
     const [Id_categoria, setId_categoria] = useState('');
     const [tipo_venta, setTipoVenta] = useState('unidad');
+    const [categorias, setCategorias] = useState([]);
+
+
 
     useEffect(() => {
         axios.get(`http://localhost:3001/productos/`)
@@ -46,7 +48,7 @@ const NuevoProduct = ({ filename, sheetname }) => {
                 precioCompra: parseFloat(precioCompra),
                 precioVenta: parseFloat(precioVenta),
                 cantidad_producto: parseFloat(cantidad_producto),
-                Id_categoria: Id_categoria,
+                Id_categoria: document.getElementById("categoria").value,
                 tipo_venta: tipo_venta, 
             })
             .then(() => {
@@ -56,20 +58,24 @@ const NuevoProduct = ({ filename, sheetname }) => {
                console.log(typeof(cantidad_producto)) 
 
             })
-            .catch(() => {
-                console.log('Error al crear el producto:');
+            .catch((error) => {
+                console.log('Error al crear el producto:',error);
             });
     };
 
 
-  
 
-    const [value, setValue] = useState("");
 
-    useScanDetection({
-        onComplete: setValue,
-        minLength: 15
-    });
+    const verCategorias = () =>{
+        axios.get("http://localhost:3001/categorias").then((response)=>{
+            setCategorias(response.data)
+        })
+
+    }
+
+    useEffect(()=>{
+        verCategorias()
+    },[])
 
     return (
         <>
@@ -104,9 +110,11 @@ const NuevoProduct = ({ filename, sheetname }) => {
             <input className='form-control' type='text' placeholder="Cantidad" value={cantidad_producto} onChange={(e) => setCantidad_Producto(e.target.value)}/>
           </MDBInputGroup>
 
-          <MDBInputGroup  textBefore='🛒' className='mb-3' >
-            <input className='form-control' type='text' placeholder="Departamento" value={Id_categoria} onChange={(e) => setId_categoria(e.target.value)} />
-          </MDBInputGroup>
+            <Form.Select  key={Id_categoria} aria-label="Nombre Categoria" id="categoria">
+                {categorias.map((cat)=>   
+                    <option key={cat.Id_categoria} value={cat.Id_categoria}>{cat.nombre_categoria}</option>   
+                )}
+            </Form.Select>
                 
 
 
