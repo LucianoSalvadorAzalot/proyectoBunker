@@ -2,14 +2,15 @@ const {Router} = require('express')
 const router = Router()
 
 
-const {verCompra, crearCompra, compraCorrelativa,aumentarStock,verLaCompraCompleta} = require('../controllers/Compra')
+const {verCompra, crearCompra, editarCompra} = require('../controllers/Compra')
 
 
 router.get("/compra",verCompra)
-router.get("/compra/correlativa",compraCorrelativa)
-router.get("/compra/sucursal/:Id_sucursal", verLaCompraCompleta)
+
 router.post("/compra/post", crearCompra)
-router.put("/compra/aumentarStock",aumentarStock)
+
+router.put("/compra/put/:Id_compra",editarCompra)
+
 
 
 module.exports = router

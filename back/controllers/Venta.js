@@ -31,18 +31,10 @@ const crearVenta = (req,res) => {
 }
 
 
-const eliminarVenta = (req,res) => {
-    const Id_venta= req.params.Id_venta
-    connection.query = ('DELETE FROM Venta WHERE Id_venta=' + Id_venta, 
-    (error,results)=>{
-        if(error) throw error
-        res.json(results)
-    })
-}
 
 
 const correlativa= (req,res)=>{
-    connection.query("select count (*) +1 as 'ultimopedido' from Venta",
+    connection.query("SELECT MAX(Id_venta) +1 AS ultimoIdVenta FROM Venta;",
     (err,result)=>{
         if(err){
         console.log(err)
@@ -50,6 +42,8 @@ const correlativa= (req,res)=>{
         res.send(result)
     }})
 }
+
+
 
 
 
@@ -134,7 +128,7 @@ const verLaVentaCompleta = (req, res) => {
           Id_producto: item.Id_producto,
           nombre_producto: item.nombre_producto,
           descripcion_producto: item.descripcion_producto,
-          precioVenta: item.precioVenta, // Asegúrate de usar el nombre correcto de la columna aquí
+          precioVenta: item.precioVenta, 
           cantidadVendida: item.cantidadVendida, 
           Id_detalleVenta: item.Id_detalleVenta,
           descripcion_detalleVenta: item.descripcion_detalleVenta,
@@ -151,22 +145,57 @@ const verLaVentaCompleta = (req, res) => {
 
   
 
+const eliminarVenta = (req,res) => {
+  const Id_venta= req.params.Id_venta
+  connection.query ('DELETE FROM Venta WHERE Id_venta=' + Id_venta, 
+  (error,results)=>{
+      if(error) throw error
+      res.json(results)
+  })
+}
+
+
+const ultimaVenta= (req,res)=>{
+  connection.query("SELECT MAX(Id_venta) AS ultimoIdVenta FROM Venta",
+  (err,result)=>{
+      if(err){
+      console.log(err)
+  }else{
+      res.send(result)
+  }})
+  
+}
+
 
 
 
 
 const descCantidad = (req, res) => {
-   const cantidad_producto = req.body.cantidad_producto
-   const Id_producto = req.body.Id_producto
-        connection.query('UPDATE Producto SET cantidad_producto = cantidad_producto - ? WHERE Id_producto = ?', [cantidad_producto, Id_producto], (error, results) => {
-            if (error) {
-                console.log('Error al actualizar el stock:', error);
-            }
-       
-    });
+  const Id_producto = req.body.Id_producto;
+  const Id_sucursal = req.body.Id_sucursal;
+  const cantidad = req.body.cantidad;
 
-    res.json({ message: 'Stock actualizado correctamente' });
+  connection.query('UPDATE Stock SET cantidad = cantidad - ? WHERE Id_producto = ? AND Id_sucursal = ?', [cantidad, Id_producto, Id_sucursal], (error, results) => {
+    if (error) {
+      console.log('Error al actualizar el stock:', error);
+    }
+    res.json(results);
+  });
 };
+
+const aumentarCantidad = (req, res) => {
+  const Id_producto = req.body.Id_producto;
+  const Id_sucursal = req.body.Id_sucursal;
+  const cantidad = req.body.cantidad;
+
+  connection.query('UPDATE Stock SET cantidad = cantidad + ? WHERE Id_producto = ? AND Id_sucursal = ?', [cantidad, Id_producto, Id_sucursal], (error, results) => {
+    if (error) {
+      console.log('Error al actualizar el stock:', error);
+    }
+    res.json(results);
+  });
+};
+
 
 
 
@@ -188,4 +217,4 @@ const AumentarCredito = (req, res) => {
 
 
 
-module.exports = { verVenta,crearVenta,eliminarVenta,correlativa, verLaVentaCompleta,descCantidad,AumentarCredito}
+module.exports = { verVenta,crearVenta,eliminarVenta,correlativa, verLaVentaCompleta,descCantidad,AumentarCredito,ultimaVenta, aumentarCantidad}

@@ -16,12 +16,9 @@ const crearCliente = (req,res)=>{
         nombre_cliente: req.body.nombre_cliente,
         apellido_cliente: req.body.apellido_cliente,
         telefono_cliente: req.body.telefono_cliente,
-        correo_cliente: req.body.correo_cliente,
         domicilio_cliente: req.body.domicilio_cliente,
-        ciudad_cliente: req.body.ciudad_cliente,
-        codigoPostal_cliente: req.body.codigoPostal_cliente,
-        estado_cliente: req.body.estado_cliente,
-        montoCredito: req.body.montoCredito
+        montoCredito: req.body.montoCredito,
+        LimiteCredito: req.body.LimiteCredito
     },
     (error,results)=>{
         if(error) throw error
@@ -32,18 +29,15 @@ const crearCliente = (req,res)=>{
 
 const editarCliente = (req,res)=>{
     const Id_cliente = req.params.Id_cliente
-    const {nombre_cliente,apellido_cliente,telefono_cliente,correo_cliente,domicilio_cliente,ciudad_cliente,codigoPostal_cliente,estado_cliente,montoCredito}=req.body
+    const {nombre_cliente,apellido_cliente,telefono_cliente,domicilio_cliente,montoCredito,LimiteCredito}=req.body
     connection.query(`UPDATE Cliente SET
 
                     nombre_cliente='${nombre_cliente}',
                     apellido_cliente= '${apellido_cliente}',
                     telefono_cliente= '${telefono_cliente}',
-                    correo_cliente= '${correo_cliente}',
                     domicilio_cliente='${domicilio_cliente}',
-                    ciudad_cliente= '${ciudad_cliente}',
-                    codigoPostal_cliente= '${codigoPostal_cliente}',
-                    estado_cliente= '${estado_cliente}',
-                    montoCredito = '${montoCredito}'
+                    montoCredito = '${montoCredito}',
+                    LimiteCredito= '${LimiteCredito}'
 
 
                     WHERE Id_cliente =${Id_cliente}  `,

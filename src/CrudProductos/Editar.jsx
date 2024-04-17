@@ -40,11 +40,11 @@ const Editar = () => {
             descripcion_producto: descripcion_producto,
             precioCompra: precioCompra,
             precioVenta: precioVenta,
-            cantidad_producto: cantidad_producto,
-            Id_categoria: Id_categoria   
+            Id_categoria: document.getElementById("categoria").value   
 
         }).then(()=>{
-      
+            alert('producto editado')
+            limpiarCampos()
         })
     }
 
@@ -66,6 +66,17 @@ const Editar = () => {
         setcantidad_Producto(val.cantidad_producto)
         setId_categoria(val.nombre_categoria)
         setTipoVenta(val.tipo_venta)
+    }
+    const limpiarCampos = () =>{
+
+        setId_Producto('')
+        setnombre_Producto('')
+        setdescripcion_Producto('')
+        setPrecioCompra('')
+        setPrecioVenta('')
+        setcantidad_Producto('')
+        setId_categoria('')
+        setTipoVenta('')
     }
 
     useEffect(()=>{
@@ -115,16 +126,11 @@ const Editar = () => {
                 <option value="unidad">Unidad</option>
                 <option value="granel">Granel gr</option>
             </Form.Select>
-
-
         <br />
-          <MDBInputGroup textBefore='➕' className='mb-3' >
-            <input className='form-control' type='text' placeholder="Cantidad" value={cantidad_producto} onChange={(e) => setcantidad_Producto(e.target.value)}/>
-          </MDBInputGroup>
 
-          <Form.Select  key={Id_categoria} aria-label="Nombre Categoria" id="categoria">
+          <h3> Categoria producto:</h3><Form.Select  key={Id_categoria} aria-label="Nombre Categoria" id="categoria">
             {categorias.map((cat)=>   
-                <option key={cat.Id_categoria}>{cat.nombre_categoria}</option>   
+                <option key={cat.Id_categoria}  value={cat.Id_categoria}>{cat.nombre_categoria}</option>   
             )}
         </Form.Select>
          
@@ -150,7 +156,6 @@ const Editar = () => {
                         <th>Precio costo</th>
                         <th>Precio venta</th>
                         <th>Tipo de venta</th>
-                        <th>Cantidad</th>
                         <th>Departamento</th>
                         <th>Fecha registro</th>
                         <th>Ganancia</th>
@@ -167,12 +172,10 @@ const Editar = () => {
                                 <td>{val.precioCompra}</td>
                                 <td>{val.precioVenta}</td>
                                 <td>{val.tipo_venta}</td>
-                                <td>{val.tipo_venta === 'granel' ? parseFloat(val.cantidad_producto).toFixed(2) : val.cantidad_producto}</td>
-
                                 <td>{val.nombre_categoria}</td>
                                 <td>{new Date(val.fecha_registro).toISOString().slice(0, 10)}</td>
                                 <td>${parseFloat( val.precioVenta - val.precioCompra ) }</td>
-                                <td><Button className="btn btn-warning" onClick={()=>seeProductos(val)}> EDITAR</Button></td>
+                                <td><Button className="btn btn-warning" onClick={()=>seeProductos(val)}> 👀VER</Button></td>
                             </tr>
                         ))
                     }

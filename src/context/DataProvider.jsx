@@ -8,11 +8,12 @@ const DataProvider = ({children}) => {
     const [productos, setProductos] = useState([])
     const [sucursales, setSucursales] = useState([])
 
+      
     
     const fetchProductos = async ()  =>{ 
         const response = await fetch(`http://localhost:3001/productos`)
         const data = await response.json()
-        console.log(data)
+
         setProductos(data)
     };
 
@@ -22,14 +23,18 @@ const DataProvider = ({children}) => {
     const traerSucursales = async () =>{
       const response = await fetch("http://localhost:3001/sucursales")
       const data = await response.json()
-      console.log(data)
+
       setSucursales(data)
     }
+
+
+  
 
 
     useEffect(() => {
         fetchProductos()
         traerSucursales()
+        
     }, [])
 
   return (

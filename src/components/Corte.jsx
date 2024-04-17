@@ -5,6 +5,7 @@ import * as XLSX from 'xlsx';
 import '../index.css';
 
 export const Corte = ({ filename, sheetname }) => {
+  
   const [buscar, setBuscar] = useState("");
   const [resultado, setResultado] = useState([]);
   const [sumaTotal, setSumaTotal] = useState(0);
@@ -24,14 +25,15 @@ export const Corte = ({ filename, sheetname }) => {
     } else {
       resultadoFiltrado = resultado.filter((dato) => {
         const fechaRegistroStr = new Date(dato.fecha_registro).toLocaleString().toLowerCase();
-        const nombreUsuarioStr = dato.usuarios.nombre_usuario.toLowerCase();
+        const nombreUsuarioStr = dato.usuarios.nombre_usuario.toLocaleString().toLowerCase();
         return fechaRegistroStr.includes(textoBuscado) || nombreUsuarioStr.includes(textoBuscado);
       });
     }
   
     total = resultadoFiltrado.reduce((acumulador, valorActual) => acumulador + parseFloat(valorActual.precioTotal_venta), 0);
-    setResultado(resultadoFiltrado);
     setSumaTotal(total);
+
+    setResultado(resultadoFiltrado);
   };
 
  
@@ -73,8 +75,6 @@ export const Corte = ({ filename, sheetname }) => {
       });
   }, [id_sucursal]); 
 
-  
-
 useEffect(()=>{
   verUsuarios()
 },[])
@@ -99,8 +99,10 @@ useEffect(()=>{
       <th>Total de la venta</th>
       <th>Productos de la venta</th>
       <th>Cantidad vendida</th>
+      <th>Precio producto</th>
       <th>Fecha Registro</th>
       <th>Empleado que realizó la venta</th>
+
     </tr>
   </thead>
   <tbody>
@@ -119,8 +121,14 @@ useEffect(()=>{
             <li key={producto.Id_producto}>Cantidad: {parseInt(producto.cantidadVendida)}</li>
           ))}
         </td>        
+        <td>
+          {val.productos.map((producto) => (
+            <li key={producto.Id_producto}>Precio del producto: {producto.precioVenta}</li>
+          ))}
+        </td>        
         <td>{new Date(val.fecha_registro).toLocaleString()}</td>
         <td>{val.usuarios.nombre_usuario}</td>
+       
       </tr>
     ))}
   </tbody>

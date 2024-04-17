@@ -17,9 +17,9 @@ export default function Productos() {
             <div className='col-xl'>
             <Link to="/editarProducto">Modificar</Link>
             </div>
-            <div className='col-xl'>
+            {/* <div className='col-xl'>
             <Link to="/eliminarProducto">Eliminar</Link>
-            </div>
+            </div> */}
             <div className='col-xl'>
             <Link to="/departamentos">Departamentos</Link>
             </div>

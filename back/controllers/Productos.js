@@ -11,7 +11,7 @@ const {connection} = require ('../database/config')
 
 
 const verProductos =(req,res)=>{
-  connection.query('SELECT p.Id_producto, p.nombre_producto, p.descripcion_producto, p.precioCompra, p.precioVenta, p.cantidad_producto, p.tipo_venta,  p.fecha_registro, c.nombre_categoria, c.descripcion_categoria FROM Producto p  INNER JOIN Categoria c  ON p.Id_categoria = c.Id_categoria  ',
+  connection.query('SELECT p.Id_producto, p.nombre_producto, p.descripcion_producto, p.precioCompra, p.precioVenta, p.tipo_venta,  p.fecha_registro, c.nombre_categoria, c.descripcion_categoria FROM Producto p  INNER JOIN Categoria c  ON p.Id_categoria = c.Id_categoria  ',
   (error,results)=>{
       if(error)throw error
       res.json(results)
@@ -28,7 +28,6 @@ const crearProductos = (req, res) => {
           descripcion_producto: req.body.descripcion_producto,
           precioCompra: req.body.precioCompra, 
           precioVenta: req.body.precioVenta,
-          cantidad_producto: req.body.cantidad_producto,
           Id_categoria: req.body.Id_categoria,
           tipo_venta: req.body.tipo_venta 
       }, 
@@ -47,13 +46,12 @@ const crearProductos = (req, res) => {
 
 const editarProductos = (req,res)=>{
     const Id_producto= req.params.Id_producto
-    const{nombre_producto,descripcion_producto,precioCompra,cantidad_producto,Id_categoria,precioVenta} = req.body
-    connection.query(`UPDATE Producto SET
+    const{nombre_producto,descripcion_producto,precioCompra,Id_categoria,precioVenta} = req.body
+    connection.query( `UPDATE Producto SET
 
                             nombre_producto='${nombre_producto}',
                             precioCompra='${precioCompra}',
                             precioVenta= '${precioVenta}',
-                            cantidad_producto= '${cantidad_producto}',
                             descripcion_producto='${descripcion_producto}',
                             Id_categoria = '${Id_categoria}'
 
@@ -108,5 +106,15 @@ const ProductoList = (req, res) => {
   };
   
 
+const verPlataEnStock = (req,res) =>{
+  connection.query(`SELECT
+  (SELECT SUM(precioCompra) FROM producto) AS stock_plata,
+  (SELECT SUM(cantidad) FROM stock) AS cantidad_productos,
+  (SELECT SUM(precioCompra) FROM producto) * (SELECT SUM(cantidad) FROM stock) AS total_valor`
+,(error,results)=>{
+  if(error) throw error
+  res.json(results)
+})
+}
 
-module.exports= {verProductos,crearProductos,editarProductos,eliminarProductos,ProductoList}
+module.exports= {verProductos,crearProductos,editarProductos,eliminarProductos,ProductoList,verPlataEnStock}

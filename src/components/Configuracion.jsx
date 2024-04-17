@@ -18,7 +18,7 @@ export default function Configuracion() {
    const [nombre_proveedor, setNombre_proveedor] = useState("")
    const [Id_proveedor, setId_proveedor] = useState("")
    const[buscar,setBuscar] = useState();
- 
+   const [editarProveedores, setEditarProveedores] = useState(false)  
 
    const buscador = (e)=>{
      setBuscar(e.target.value)
@@ -34,9 +34,18 @@ export default function Configuracion() {
  }
 
  const seeProveedores= (val) =>{
+  setEditarProveedores(true)
+  setId_proveedor(val.Id_proveedor)
   setNombre_proveedor(val.nombre_proveedor)
   setdDescripcion_proveedor(val.descripcion_proveedor)
   setNumTel_proveedor(val.numTel_proveedor)
+ }
+ const limpiarCampos= () =>{
+  setEditarProveedores(false)
+  setId_proveedor("")
+  setNombre_proveedor("")
+  setdDescripcion_proveedor("")
+  setNumTel_proveedor("")
  }
 
    const verLosProveedores = () =>{
@@ -51,7 +60,9 @@ export default function Configuracion() {
       descripcion_proveedor: descripcion_proveedor,
       numTel_proveedor: numTel_proveedor
     }).then(()=>{
+      alert('funca')
       verLosProveedores()
+      limpiarCampos()
     }).catch(()=>{
       console.log('error al crear proveedor')
     })
@@ -69,6 +80,7 @@ export default function Configuracion() {
     }).then(()=>{
       alert('proveedor editado')
       verLosProveedores()
+      limpiarCampos()
     }).catch((error)=>{
       console.log('error al ediar proveedor',error)
   
@@ -80,7 +92,7 @@ export default function Configuracion() {
     axios.delete(`http://localhost:3001/proveedores/delete/${val.Id_proveedor}`,).then(()=>{
       verLosProveedores()
     }).then(()=>{
-      alert('cliente eliminado con exito')
+      alert('proveedor eliminado con exito')
     })
    }
 
@@ -114,14 +126,23 @@ export default function Configuracion() {
             <input className='form-control' type='number' placeholder="Telefono" value={numTel_proveedor} onChange={(e) => setNumTel_proveedor(e.target.value)} />
           </MDBInputGroup>
                 
-                  <div className="row">
-                      <div className="col-2"><br />
-                          <Button className="btn btn-info" onClick={crearProveedores}>✔️Guardar Proveedor</Button>
-                      </div> 
-                      <div className="col-2"><br />
-                          <Button className="btn btn-warning" onClick={editarProveedor}>✔️Editar Proveedor</Button>
-                      </div> 
-                  </div><br /><br />
+          <div className='card-footer text-muted'>
+                  {
+                  editarProveedores ? 
+                  <div >
+                    <Button className="btn btn-warning m-2" onClick={editarProveedor}>✔️Editar Proveedor</Button>
+                
+                    <Button className="btn btn-danger m-2" onClick={limpiarCampos}>❌ Cancelar</Button>
+                  </div> 
+                  :      
+                  <div > 
+                    <Button className="btn btn-success m-2" onClick={crearProveedores}>✔️Guardar Proveedor</Button>
+                  </div> 
+                  }
+
+                    
+                   
+                </div>
                   <input value={buscar} onChange={buscador} type="text" placeholder='Busca un cliente...' className='form-control'/>
               </div>
               <table className='table table-striped table-hover mt-5 shadow-lg'>
@@ -131,7 +152,7 @@ export default function Configuracion() {
                           <th>Descripcion</th>
                           <th>Telefono</th>
                           <th>EDITAR</th>
-                          <th>ELIMINAR</th>
+                          {/* <th>ELIMINAR</th> */}
                       </tr>
                   </thead>
                   <tbody>
@@ -144,9 +165,9 @@ export default function Configuracion() {
                                   <td  aria-label="Basic example">
                                        <Button type='button' className='btn btn-warning m-2' onClick={()=>{seeProveedores(val)}}> EDITAR </Button>
                                   </td>
-                                  <td aria-label="Basic example">
+                                  {/* <td aria-label="Basic example">
                                        <Button type='button' className='btn btn-danger m-2' onClick={()=>{eliminarProveedor(val)}}> ELIMINAR </Button>
-                                  </td>
+                                  </td> */}
                               </tr>
                           ))
                       }

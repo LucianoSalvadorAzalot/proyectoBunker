@@ -22,7 +22,7 @@ const crear = (req,res) =>{
 const editar = (req,res) =>{
     const Id_metodoPago = req.params.Id_metodoPago;
     const tipo_metodoPago = req.body.tipo_metodoPago
-    connection.query(`UPADATE MetoPago SET
+    connection.query(`UPDATE MetoPago SET
     
                     tipo_metodoPago = '${tipo_metodoPago}'
 

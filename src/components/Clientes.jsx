@@ -13,13 +13,10 @@ import {
   const[nombre_cliente,setNombreCliente] = useState();
   const[apellido_cliente,setApellidoCliente] = useState();
   const[telefono_cliente,setTelefonoCliente] = useState();
-  const[correo_cliente,setCorreoCliente] = useState();
   const[domicilio_cliente,setDomicilioCliente] = useState();
-  const[ciudad_cliente,setCiudadCliente] = useState();
-  const[codigoPostal_cliente,setCodigoPostal_cliente] = useState();
-  const[estado_cliente,setEstadoCliente] = useState();
   const [montoCredito, setMontoCredito] = useState("")
-
+  const [LimiteCredito, setLimiteCredito] = useState(0)
+  const [editarCliente, setEditarCliente] = useState(false)  
   
   
   const[buscar,setBuscar] = useState();
@@ -27,7 +24,7 @@ import {
   const buscador = (e) => {
     setBuscar(e.target.value)
   }
-  
+
   let resultado = []
   if (!buscar) {
     resultado = ver
@@ -57,12 +54,9 @@ import {
       nombre_cliente:nombre_cliente,
       apellido_cliente:apellido_cliente,
       telefono_cliente:telefono_cliente,
-      correo_cliente:correo_cliente,
       domicilio_cliente:domicilio_cliente,
-      ciudad_cliente:ciudad_cliente,
-      codigoPostal_cliente:codigoPostal_cliente,
-      estado_cliente:estado_cliente,
-      montoCredito: montoCredito
+      montoCredito: montoCredito,
+      LimiteCredito: LimiteCredito
     }).then(()=>{
       verClientes()
       limpiarCampos()
@@ -83,12 +77,9 @@ import {
         nombre_cliente:nombre_cliente,
         apellido_cliente:apellido_cliente,
         telefono_cliente:telefono_cliente,
-        correo_cliente:correo_cliente,
         domicilio_cliente:domicilio_cliente,
-        ciudad_cliente:ciudad_cliente,
-        codigoPostal_cliente:codigoPostal_cliente,
-        estado_cliente: estado_cliente,
-        montoCredito: montoCredito
+        montoCredito: montoCredito,
+        LimiteCredito: LimiteCredito
     }).then(()=>{
         verClientes()
         limpiarCampos()
@@ -128,29 +119,24 @@ const eliminarCliente =(val) =>{
 
 
 const seeClientes = (val) =>{
-
+  setEditarCliente(true)
   setIdCliente(val.Id_cliente)
   setNombreCliente(val.nombre_cliente)
   setApellidoCliente(val.apellido_cliente)
   setTelefonoCliente(val.telefono_cliente)
-  setCorreoCliente(val.correo_cliente)
   setDomicilioCliente(val.domicilio_cliente)
-  setCiudadCliente(val.ciudad_cliente)
-  setCodigoPostal_cliente(val.codigoPostal_cliente)
-  setEstadoCliente(val.estado_cliente)
   setMontoCredito(val.montoCredito)
+  setLimiteCredito(val.LimiteCredito)
 }
 
 const limpiarCampos = () =>{
+  setEditarCliente(false)
   setNombreCliente('')
   setApellidoCliente('')
   setTelefonoCliente('')
-  setCorreoCliente('')
   setDomicilioCliente('')
-  setCiudadCliente('')
-  setCodigoPostal_cliente('')
-  setEstadoCliente(1)
   setMontoCredito('')
+  setLimiteCredito('')
 }
 
 
@@ -191,40 +177,43 @@ const limpiarCampos = () =>{
             <input className='form-control' type='number' placeholder="Telefono" value={telefono_cliente} onChange={(e) => setTelefonoCliente(e.target.value)}/>
           </MDBInputGroup>
           
-          <MDBInputGroup textBefore='@' className='mb-3' >
-            <input className='form-control' type='email' placeholder="Correo" value={correo_cliente} onChange={(e) => setCorreoCliente(e.target.value)}/>
-          </MDBInputGroup>
-
           <MDBInputGroup  textBefore='🏠' className='mb-3' >
             <input className='form-control' type='text' placeholder="Domicilio" value={domicilio_cliente} onChange={(e) => setDomicilioCliente(e.target.value)}/>
           
           </MDBInputGroup>
 
-          <MDBInputGroup textBefore='🏙' className='mb-3' >
-            <input className='form-control' type='text' placeholder="Ciudad" value={ciudad_cliente} onChange={(e) => setCiudadCliente(e.target.value)}/>
-          </MDBInputGroup>
-
-          <MDBInputGroup className='mb-3' >
-            <input className='form-control' type='text' placeholder="Codigo Postal" value={codigoPostal_cliente} onChange={(e) => setCodigoPostal_cliente(e.target.value)}/>
-          </MDBInputGroup>
-
-          <MDBInputGroup className='mb-3' >
-            <input className='form-control' type='number' placeholder="Estado"  value={estado_cliente} onChange={(e) => setEstadoCliente(e.target.value)}/>
-          </MDBInputGroup>
-
-          <MDBInputGroup  textBefore='$' className='mb-3' textAfter='.00' >
+          <MDBInputGroup  textBefore='💲' className='mb-3' textAfter='.00' >
             <input className='form-control' type='number' placeholder="Credito"  value={montoCredito} onChange={(e) => setMontoCredito(e.target.value)}/>
           </MDBInputGroup>
 
+          <MDBInputGroup  textBefore='💲' className='mb-3' textAfter='.00' >
+            <input className='form-control' type='number' placeholder="Credito"  value={LimiteCredito} onChange={(e) => setLimiteCredito(e.target.value)}/>
+          </MDBInputGroup>
 
-                <div className="row">
-                    <div className="col-2"><br />
-                        <Button className="btn btn-info" onClick={agregarClientes}>✔️Guardar Cliente</Button>
-                    </div> 
-                    <div className="col-2"><br />
-                        <Button className="btn btn-warning" onClick={editarClientes}>✔️Editar Cliente</Button>
-                    </div> 
-                </div><br /><br />
+
+                <div className='card-footer text-muted'>
+                  {
+                  editarCliente ? 
+                  <div >
+                  <Button className="btn btn-warning m-2" onClick={editarClientes}>✔️Editar Cliente</Button>
+                
+                  <Button className="btn btn-danger m-2" onClick={limpiarCampos}>❌ Cancelar</Button>
+                  </div> 
+                  :
+                
+                      <div > 
+                      <Button className="btn btn-success m-2" onClick={agregarClientes}>✔️Guardar Cliente</Button>
+                      </div> 
+                  }
+
+                    
+                   
+                </div>
+
+
+
+
+                <br /><br />
                 <input value={buscar} onChange={buscador} type="text" placeholder='Busca un cliente...' className='form-control'/>
             </div>
 
@@ -234,17 +223,14 @@ const limpiarCampos = () =>{
             <table className='table table-striped table-hover mt-5 shadow-lg'>
                 <thead>
                     <tr className='table-success'>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Telefono</th>
-                        <th>Correo</th>
-                        <th>Domicilio</th>
-                        <th>Ciudad</th>
-                        <th>Codigo Postal</th>
-                        <th>Estado</th>
-                        <th>Credito</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
+                        <th>NOMBRE</th>
+                        <th>APELLIDO</th>
+                        <th>TELEFONO</th>
+                        <th>DOMICILIO</th>
+                        <th>CREDITO</th>
+                        <th>LIMITE CREDITO</th>
+                        <th>EDITAR</th>
+                        {/* <th>Eliminar</th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -254,18 +240,15 @@ const limpiarCampos = () =>{
                                 <td>{val.nombre_cliente}</td>
                                 <td>{val.apellido_cliente}</td>
                                 <td>{val.telefono_cliente}</td>
-                                <td>{val.correo_cliente}</td>
-                                <td>{val.domicilio_cliente}</td>
-                                <td>{val.ciudad_cliente}</td>
-                                <td>{val.codigoPostal_cliente}</td>
-                                <td>{val.estado_cliente}</td>
+                                <td>{val.domicilio_cliente}</td>              
                                 <td>{val.montoCredito}</td>
+                                <td>{val.LimiteCredito}</td>
                                 <td className=''  aria-label="Basic example">
-                                     <Button type='button' className='btn btn-warning m-2' onClick={()=>{seeClientes(val)}}> EDITAR </Button>
+                                     <Button type='button' className='btn btn-warning m-2' onClick={()=>{seeClientes(val)}}> 👀VER </Button>
                                 </td>
-                                <td className=''  aria-label="Basic example">
+                                {/* <td className=''  aria-label="Basic example">
                                      <Button type='button' className='btn btn-danger m-2' onClick={()=>{eliminarCliente(val)}}> ELIMINAR </Button>
-                                </td>
+                                </td> */}
                             </tr>
                         ))
                     }

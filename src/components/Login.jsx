@@ -28,6 +28,7 @@ const Login = () => {
       const sucursalId = response.data.sucursalId;
       if (sucursalId) {
         localStorage.setItem('sucursalId', sucursalId);
+        localStorage.setItem('nombreSucursal', nombre_sucursal)
         navigate('/loginUsuario', { replace: true });
         Swal.fire({
           title: " <strong>Ingreso exitoso!</strong>",
