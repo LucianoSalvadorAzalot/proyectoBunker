@@ -22,7 +22,8 @@ const crearDetalleVenta = (req, res) => {
         ganacia_detalleVenta: req.body.ganacia_detalleVenta,
         Id_producto: req.body.Id_producto,     
         CantidadVendida: req.body.CantidadVendida,
-        Id_caja: req.body.Id_caja       
+        Id_caja: req.body.Id_caja,
+        IdEstadoCredito: req.body.IdEstadoCredito       
     };
 
     connection.query("INSERT INTO DetalleVenta SET ?", detalleVentaData, (error, results) => {
@@ -67,7 +68,8 @@ const ultimoDetalle = (req, res) => {
   INNER JOIN 
     Usuarios u ON v.Id_usuario = u.Id_usuario
   WHERE 
-    v.Id_sucursal = 1 AND
+    v.Id_sucursal = ? 
+    AND
     v.Id_venta = (
       SELECT 
         d.Id_venta 
@@ -76,18 +78,18 @@ const ultimoDetalle = (req, res) => {
       INNER JOIN 
         Venta v ON d.Id_venta = v.Id_venta
       WHERE 
-        v.Id_sucursal = 1
+        v.Id_sucursal = ?
       GROUP BY 
         d.Id_venta
       HAVING 
-        COUNT(*) > 1
+        COUNT(*) >= 1
       ORDER BY 
         MAX(v.fecha_registro) DESC
       LIMIT 1
     )
   ORDER BY
     v.fecha_registro DESC;
-  ;`,[Id_sucursal], (error, results) => {
+  ;`,[Id_sucursal ,Id_sucursal], (error, results) => {
       if (error) {
         console.error("Error al obtener las ventas:", error);
         res.status(500).send("Error interno del servidor al obtener las ventas");

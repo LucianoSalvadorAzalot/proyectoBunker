@@ -78,7 +78,6 @@ const TestVenta = () => {
 
   const calcularTotal = () => {
     return listaCompras.reduce((total, item) => total + item.precioVenta * cantidadesVendidas[item.Id_producto], 0);
-
   };
 
   const SumarIntereses = () => { 
@@ -105,7 +104,7 @@ const TestVenta = () => {
 
     
   const totalConCredito  = () =>{
-    return  creditoActaul + SumarIntereses()
+    return  parseFloat(creditoActaul)  + SumarIntereses()
   }
 
 
@@ -161,23 +160,17 @@ const TestVenta = () => {
     })
   };
 
-
-
    const traerUltimaVenta = async() =>{
      await axios.get(`http://localhost:3001/venta/UltimaVenta`).then((response)=>{
       setUltimaVenta( response.data[0].ultimoIdVenta)
-      console.log('aqui ta la ultima venta', ultimaVenta)
     }).catch((error)=>{
       console.log('no se puede traer la ultima venta',error)
     })
    }
 
-
-
   const traerUltimoDetalle = async  () =>{
     await  axios.get(`http://localhost:3001/detalleVenta/ultimoDetalle/${id_sucursal}`).then((response)=>{
       setUltimoDetalle(response.data)
-      console.log('ultimo detalle',ultimoDetalle)
     }).catch((error)=>{
       console.log('no se puede traer el ultimo detalle', error)
     })  
@@ -204,7 +197,7 @@ const id_usuario = localStorage.getItem('idUsuario')
   const traerVentaCorrelativa = async () => {
    await axios.get("http://localhost:3001/ventacorrelativa").then((response) => {
       setId_venta(response.data[0].ultimoIdVenta);
-      console.log('y ahora que',Id_venta)
+      // console.log('y ahora que',Id_venta)
     }).catch((error) => {
       console.log('error en traer id_venta', error)
     })
@@ -257,18 +250,17 @@ const id_usuario = localStorage.getItem('idUsuario')
 
   
   const FinalizarVenta = () => {
-
-    
+   
     const Id_metodoPago = parseInt(document.getElementById("metodoPago").value); 
     if (Object.values(cantidadesVendidas).some(cantidad => cantidad > productos.cantidad_producto)) {
       alert('No puedes vender más productos de los que tienes en stock');
       return;
     }
-    if( Id_metodoPago === 3 &&   SumarIntereses() > totalConCredito()){
+    if( Id_metodoPago === 3 &&  totalConCredito() > limiteCredito  ){
       alert('no se puede vender a este cliente xq deber mucho')
       return;
      }  
-    const totalParaTodo = SumarIntereses()
+     const totalParaTodo = SumarIntereses()
     console.log('aqui1', totalParaTodo)
     axios.post("http://localhost:3001/venta/post", {
   
@@ -278,7 +270,6 @@ const id_usuario = localStorage.getItem('idUsuario')
       Id_cliente: document.getElementById("cliente").value,
       Id_sucursal: id_sucursal,
       Id_usuario: id_usuario
-
     }).then(() => {
       listaCompras.forEach((producto) => {
         axios.post("http://localhost:3001/detalleVenta/post", {
@@ -288,7 +279,8 @@ const id_usuario = localStorage.getItem('idUsuario')
           Id_producto: producto.Id_producto,
           Id_venta: parseInt(Id_venta),
           CantidadVendida: cantidadesVendidas[producto.Id_producto],
-          Id_caja: IdCaja
+          Id_caja: IdCaja,
+          IdEstadoCredito: 2
         }).then(() => {
           console.log('a ver q pasa',producto.Id_producto)
           console.log('a ver q pasa',Id_venta)
@@ -298,14 +290,15 @@ const id_usuario = localStorage.getItem('idUsuario')
             cantidad: cantidadesVendidas[producto.Id_producto],
           });
         }).then(() => {   
-          if (Id_metodoPago === 3) {           
+          if (Id_metodoPago === 3  ) {           
            axios.put("http://localhost:3001/venta/aumentarCredito", {
               Id_cliente: document.getElementById("cliente").value,
               montoCredito: totalParaTodo,           
             });    
           } 
            else {
-            console.log('aqui3', totalParaTodo)
+            console.log('aqui3', totalParaTodo, document.getElementById("cliente").value)
+        
              console.log('error al asignar el crédito')
           }
         }).catch((error) => {
@@ -315,6 +308,8 @@ const id_usuario = localStorage.getItem('idUsuario')
         });
       });
       listaCompras.length = 0;
+      console.log('aqui4  ',totalConCredito())
+      console.log('aqui5  ',totalParaTodo)
       Swal.fire({
         title: " <strong>Venta exitosa!</strong>",
         html: "<i>La venta <strong> </strong> fue agregada con éxito</i>",
@@ -328,6 +323,9 @@ const id_usuario = localStorage.getItem('idUsuario')
       console.log('error en la venta', error);
     });
   };
+
+
+
 
   useEffect(() => {
     const manejarKeyDown = (event) => {
@@ -425,7 +423,7 @@ const id_usuario = localStorage.getItem('idUsuario')
 
           <Modal show={showModal2} onHide={handleCloseModal2}>
             <Modal.Header closeButton>
-              <Modal.Title>ULRIMA VENTA</Modal.Title>
+              <Modal.Title>ULTIMA VENTA</Modal.Title>
             </Modal.Header>   
             <Modal.Body>
          

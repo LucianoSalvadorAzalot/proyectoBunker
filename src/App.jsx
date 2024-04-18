@@ -31,6 +31,11 @@ function App(  ) {
  const id_sucursal = localStorage.getItem("sucursalId")
  const id_usuario = localStorage.getItem("idUsuario")
  const FechaRegistro = localStorage.getItem("FechaRegistro")
+ const IdCaja = localStorage.getItem('idCaja')
+ const nombreUsuario = localStorage.getItem('nombreUsuario')
+ const nombreSucursal = localStorage.getItem('nombreSucursal')
+
+
 
   const calcularFaltante = () =>{
     return totalVentas.reduce((total,item)=> total + item.total_ventas - cantidadPlataCaja, 0)
@@ -42,7 +47,8 @@ function App(  ) {
     Id_sucursal: id_sucursal,
     Id_usuario: id_usuario,
     cantidadPlata: cantidadPlataCaja,
-    faltante: calcularFaltante()
+    faltante: calcularFaltante(),
+    Id_caja: IdCaja
   }).then(()=>{
     alert('todo ok')
     navegar('/')
@@ -51,9 +57,8 @@ function App(  ) {
   })
  }
 
- const nombreUsuario = localStorage.getItem('nombreUsuario')
- const nombreSucursal = localStorage.getItem('nombreSucursal')
- const IdCaja = localStorage.getItem('idCaja')
+
+
 
 
  const obtenerTotalVentas = () => {

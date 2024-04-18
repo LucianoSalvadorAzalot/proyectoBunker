@@ -45,6 +45,26 @@ const obtenerClientes = () => {
 }
 
 
+
+const descVenta = (Id_cliente, precioTotal_venta) =>{
+  axios.put("http://localhost:3001/creditos/restarCredito",{
+    Id_cliente: Id_cliente,
+    montoCredito: precioTotal_venta
+  }).then(()=>{
+    axios.put("http://localhost:3001/creditos/estadoCredito").then(()=>{
+      alert('todo ok')
+    }).catch((error)=>{
+      console.log('error al cambiar el estado',error)
+    })
+  }).catch((error)=>{
+    console.log('error al descontar el credito', error)
+  })
+}
+
+
+
+
+
   useEffect(() => {
     obtenerClientes();
   }, []);
@@ -101,7 +121,9 @@ const obtenerClientes = () => {
                     <th>PRECIO UNITARIO</th>
                     <th>TOTAL DE LA VENTA</th>
                     <th>FECHA REGISTRO</th>
-                    <th>EMPLEADO QUE HIZO VENTA</th>                
+                    <th>EMPLEADO QUE HIZO VENTA</th>   
+                    <th>ESTADO DE LA VENNTA</th>      
+                    <th>ELIMINAR LA VENTA</th>       
                   </tr>
                 </thead>
                 <tbody>
@@ -125,6 +147,8 @@ const obtenerClientes = () => {
                   <td>${dt.precioTotal_venta}</td>
                   <td>{new Date(dt.fecha_registro).toLocaleString()}</td>
                   <td>{dt.usuarios.nombre_usuario}</td>
+                  <td>{dt.tipoEstado}</td>
+                  <td><Button onClick={()=>descVenta(dt.cliente.Id_cliente, dt.precioTotal_venta)}>PAGAR</Button></td>
                   </tr>
                 ))}
                 <tr>
