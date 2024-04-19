@@ -33,7 +33,7 @@ const registrarPlataLogin = (req,res) =>{
         cantidadPlataLogin : req.body.cantidadPlataLogin,
         Id_usuario: req.body.Id_usuario,
         Id_sucursal: req.body.Id_sucursal,
-        Id_caja: req.body.Id_caja
+        Id_plataCajaLogin: req.body.Id_plataCajaLogin
     }, (error,results)=>{
         if(error) throw error
         res.json(results)

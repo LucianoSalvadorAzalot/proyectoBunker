@@ -82,12 +82,8 @@ const verElCreditoCompleto = (req, res) => {
 
 
 const estadoCreditoVenta = (req,res) =>{
-<<<<<<< HEAD
   const Id_venta = req.params.Id_venta
   connection.query("UPDATE detalleVenta SET IdEstadoCredito = 1 WHERE IdEstadoCredito = 2 AND Id_venta = ?",[Id_venta] , 
-=======
-  connection.query("UPDATE detalleVenta SET IdEstadoCredito = 1 WHERE IdEstadoCredito = 2" , 
->>>>>>> 427a73de24f0ec25152ac8304d079a20ad0d2666
 (error,results)=>{
   if(error) throw error
   res.json(results)

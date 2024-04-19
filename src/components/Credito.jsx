@@ -46,22 +46,12 @@ const obtenerClientes = () => {
   });
 }
 
-<<<<<<< HEAD
 const descVenta = (Id_cliente, precioTotal_venta, Id_venta) =>{
-=======
-
-
-const descVenta = (Id_cliente, precioTotal_venta) =>{
->>>>>>> 427a73de24f0ec25152ac8304d079a20ad0d2666
   axios.put("http://localhost:3001/creditos/restarCredito",{
     Id_cliente: Id_cliente,
     montoCredito: precioTotal_venta
   }).then(()=>{
-<<<<<<< HEAD
     axios.put(`http://localhost:3001/creditos/estadoCredito/${Id_venta}`).then(()=>{
-=======
-    axios.put("http://localhost:3001/creditos/estadoCredito").then(()=>{
->>>>>>> 427a73de24f0ec25152ac8304d079a20ad0d2666
       alert('todo ok')
     }).catch((error)=>{
       console.log('error al cambiar el estado',error)
@@ -70,14 +60,6 @@ const descVenta = (Id_cliente, precioTotal_venta) =>{
     console.log('error al descontar el credito', error)
   })
 }
-<<<<<<< HEAD
-=======
-
-
-
-
-
->>>>>>> 427a73de24f0ec25152ac8304d079a20ad0d2666
   useEffect(() => {
     obtenerClientes();
   }, []);
@@ -137,15 +119,9 @@ const descVenta = (Id_cliente, precioTotal_venta) =>{
                     <th>PRECIO UNITARIO</th>
                     <th>TOTAL DE LA VENTA</th>
                     <th>FECHA REGISTRO</th>
-<<<<<<< HEAD
                     <th>EMPLEADO QUE HIZO VENTA</th>
                     <th>ESTADO DE LA VENTA</th> 
-                    <th>ELIMINAR VENTA</th>               
-=======
-                    <th>EMPLEADO QUE HIZO VENTA</th>   
-                    <th>ESTADO DE LA VENNTA</th>      
-                    <th>ELIMINAR LA VENTA</th>       
->>>>>>> 427a73de24f0ec25152ac8304d079a20ad0d2666
+                    <th>ELIMINAR VENTA</th>            
                   </tr>
                 </thead>
                 <tbody>
@@ -178,11 +154,7 @@ const descVenta = (Id_cliente, precioTotal_venta) =>{
                   <td>{new Date(dt.fecha_registro).toLocaleString()}</td>
                   <td>{dt.usuarios.nombre_usuario}</td>
                   <td>{dt.tipoEstado}</td>
-<<<<<<< HEAD
                   <td><Button onClick={()=>descVenta(dt.cliente.Id_cliente, dt.precioTotal_venta, dt.Id_venta)}>PAGAR</Button></td>
-=======
-                  <td><Button onClick={()=>descVenta(dt.cliente.Id_cliente, dt.precioTotal_venta)}>PAGAR</Button></td>
->>>>>>> 427a73de24f0ec25152ac8304d079a20ad0d2666
                   </tr>
                 ))}
                 <tr>
