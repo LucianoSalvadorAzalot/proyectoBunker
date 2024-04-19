@@ -11,7 +11,6 @@ const verVenta = (req,res) =>{
     )
 }
 
-
 const crearVenta = (req,res) => {  
     const Id_sucursal = req.body.Id_sucursal
     connection.query('INSERT INTO Venta SET ? ',

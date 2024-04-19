@@ -69,7 +69,11 @@ const MetodoDePago = () => {
   return (
   
     <>
-      <App/><br />
+      <App/>
+
+      <div className="h3-ventas">
+        <h1>METODO DE PAGO</h1>
+      </div>
       <div className="container-fluid">
       <MDBInputGroup textBefore='📋'   className='mb-3'>
             <input className='form-control' type='text' placeholder="Nombre" value={tipo_metodoPago} onChange={(e) => setTipoMetodoPago(e.target.value)}/>

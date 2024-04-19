@@ -1,7 +1,7 @@
 import App from '../App'
 import { Modal, Button, Table} from 'react-bootstrap';
 import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { DataContext } from '../context/DataContext';
 import { CarritoContext } from '../context/CarritoContext';
 import Swal from 'sweetalert2';
@@ -11,6 +11,8 @@ import ModalCarrito from './ModalCarrito';
 import { ShoppingCart } from "@mui/icons-material";
 import { VentaContext } from '../context/VentaContext';
 import { MDBInputGroup } from 'mdb-react-ui-kit';
+import carritoImg from '../assets/logo-carrito.png'
+import logomarket from '../assets/logo-negro.png'
 
 
 const TestVenta = () => {
@@ -34,6 +36,9 @@ const TestVenta = () => {
     const [montoTotalIngreso, setMontoTotalIngreso] = useState(0)
     const [descripcionEgreso, setDescripcionEgreso] = useState('')
     const [descripcionIngreso, setDescripcionIgreso] = useState('')
+    const [efectivo, setEfectivo] = useState(null);
+    const [tarjeta, setTarjeta] = useState(null);
+
     
     const [estadoModal1, setEstadoModal1] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -71,7 +76,6 @@ const TestVenta = () => {
     const { productos } = useContext(DataContext);
     
 
-
   const id_sucursal = localStorage.getItem('sucursalId');
   const IdCaja = localStorage.getItem('idCaja')
 
@@ -84,6 +88,14 @@ const TestVenta = () => {
   const SumarIntereses = () => { 
     return calcularTotal() + (calcularTotal() * intereses) / 100
   };
+
+  const restante = () =>{
+    const total = calcularTotal();
+    const restanteEfectivo = total - efectivo;
+    const restanteTarjeta = restanteEfectivo - tarjeta;
+    return restanteTarjeta >= 0 ? restanteTarjeta : 0;
+  }
+
 
 
   const cambio = () => {
@@ -103,9 +115,8 @@ const TestVenta = () => {
     )
   }
 
-    
   const totalConCredito  = () =>{
-    return  creditoActaul + SumarIntereses()
+    return  parseFloat(creditoActaul)  + SumarIntereses()
   }
 
 
@@ -116,6 +127,10 @@ const TestVenta = () => {
     agregarVenta(venta);
     alert('Venta guardada');
     console.log('aqui',venta)
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(amount);
   };
   
 
@@ -166,7 +181,7 @@ const TestVenta = () => {
    const traerUltimaVenta = async() =>{
      await axios.get(`http://localhost:3001/venta/UltimaVenta`).then((response)=>{
       setUltimaVenta( response.data[0].ultimoIdVenta)
-      console.log('aqui ta la ultima venta', ultimaVenta)
+      // console.log('aqui ta la ultima venta', ultimaVenta)
     }).catch((error)=>{
       console.log('no se puede traer la ultima venta',error)
     })
@@ -177,7 +192,7 @@ const TestVenta = () => {
   const traerUltimoDetalle = async  () =>{
     await  axios.get(`http://localhost:3001/detalleVenta/ultimoDetalle/${id_sucursal}`).then((response)=>{
       setUltimoDetalle(response.data)
-      console.log('ultimo detalle',ultimoDetalle)
+      // console.log('ultimo detalle',ultimoDetalle)
     }).catch((error)=>{
       console.log('no se puede traer el ultimo detalle', error)
     })  
@@ -204,7 +219,7 @@ const id_usuario = localStorage.getItem('idUsuario')
   const traerVentaCorrelativa = async () => {
    await axios.get("http://localhost:3001/ventacorrelativa").then((response) => {
       setId_venta(response.data[0].ultimoIdVenta);
-      console.log('y ahora que',Id_venta)
+      // console.log('y ahora que',Id_venta)
     }).catch((error) => {
       console.log('error en traer id_venta', error)
     })
@@ -218,9 +233,14 @@ const id_usuario = localStorage.getItem('idUsuario')
       montoTotalIngreso: montoTotalIngreso,
       Id_sucursal: id_sucursal,
       Id_usuario: id_usuario,
-      Id_caja: Id_caja
+      Id_caja: Id_caja,
     }).then(()=>{
-      alert('ingreso registrado')
+      Swal.fire({
+        title: " <strong>Registro de ingreso exitoso!</strong>",
+        html: "<strong> Verifique el monto en corte</strong>",
+        icon: 'success',
+        timer:3000
+      })     
       setShowModal6(false);
     }).catch((error)=>{
       alert('ingreso no registrado')
@@ -234,10 +254,14 @@ const id_usuario = localStorage.getItem('idUsuario')
       montoTotalEgreso: montoTotalEgreso,
       Id_sucursal: id_sucursal,
       Id_usuario: id_usuario,
-      Id_caja: Id_caja
-   
+      Id_caja: Id_caja,
     }).then(()=>{
-      alert('Egreso registrado')
+      Swal.fire({
+        title: " <strong>Registro de egreso exitoso!</strong>",
+        html: "<strong> Verifique el monto en corte</strong>",
+        icon: 'success',
+        timer:3000
+      })     
       setShowModal7(false);
     }).catch((error)=>{
       alert('Egreso no registrado')
@@ -264,11 +288,11 @@ const id_usuario = localStorage.getItem('idUsuario')
       alert('No puedes vender más productos de los que tienes en stock');
       return;
     }
-    if( Id_metodoPago === 3 &&   SumarIntereses() > totalConCredito()){
+    if( Id_metodoPago === 3 &&  totalConCredito() > limiteCredito  ){
       alert('no se puede vender a este cliente xq deber mucho')
       return;
      }  
-    const totalParaTodo = SumarIntereses()
+     const totalParaTodo = SumarIntereses()
     console.log('aqui1', totalParaTodo)
     axios.post("http://localhost:3001/venta/post", {
   
@@ -288,7 +312,8 @@ const id_usuario = localStorage.getItem('idUsuario')
           Id_producto: producto.Id_producto,
           Id_venta: parseInt(Id_venta),
           CantidadVendida: cantidadesVendidas[producto.Id_producto],
-          Id_caja: IdCaja
+          Id_caja: IdCaja,
+          IdEstadoCredito: 2
         }).then(() => {
           console.log('a ver q pasa',producto.Id_producto)
           console.log('a ver q pasa',Id_venta)
@@ -298,14 +323,15 @@ const id_usuario = localStorage.getItem('idUsuario')
             cantidad: cantidadesVendidas[producto.Id_producto],
           });
         }).then(() => {   
-          if (Id_metodoPago === 3) {           
+          if (Id_metodoPago === 3  ) {           
            axios.put("http://localhost:3001/venta/aumentarCredito", {
               Id_cliente: document.getElementById("cliente").value,
               montoCredito: totalParaTodo,           
             });    
           } 
            else {
-            console.log('aqui3', totalParaTodo)
+            console.log('aqui3', totalParaTodo, document.getElementById("cliente").value)
+        
              console.log('error al asignar el crédito')
           }
         }).catch((error) => {
@@ -315,6 +341,8 @@ const id_usuario = localStorage.getItem('idUsuario')
         });
       });
       listaCompras.length = 0;
+      console.log('aqui4  ',totalConCredito())
+      console.log('aqui5  ',totalParaTodo)
       Swal.fire({
         title: " <strong>Venta exitosa!</strong>",
         html: "<i>La venta <strong> </strong> fue agregada con éxito</i>",
@@ -328,6 +356,9 @@ const id_usuario = localStorage.getItem('idUsuario')
       console.log('error en la venta', error);
     });
   };
+
+
+
 
   useEffect(() => {
     const manejarKeyDown = (event) => {
@@ -358,14 +389,19 @@ const id_usuario = localStorage.getItem('idUsuario')
       return (
       <>
       <App/>
-      <h1>VENTAS</h1>
+      <div className='h3-ventas'>
+        <h1>VENTAS</h1>
+      </div>
+
+      
       <div className='container-fluid'>
             <div className='row'>
             <div className='col'>
-                <ContenedorBotones>
+            <img src={logomarket} alt="" style={{ maxWidth: '30%', height: 'auto', marginTop: '30px' }} />
+                <ContenedorBotones style={{marginTop: '50px'}}>
                 <Button variant="dark" onClick={() => setEstadoModal1(true)}>
                     <Badge badgeContent={listaCompras.length} color="secondary">
-                    F2 PRODUCTOS  <ShoppingCart color="action" />
+                    F2 PRODUCTOS <img src={carritoImg} alt="carrito" style={{ width: '25px', height: 'auto', marginLeft: "7px" }}/>
                     </Badge>
                 </Button>
                 </ContenedorBotones>
@@ -387,30 +423,45 @@ const id_usuario = localStorage.getItem('idUsuario')
               <h4><b>${SumarIntereses()}</b></h4>
 
           <label><b>ABONA CON:</b></label>
-          <input type="number" onChange={(e) => setVuelto(e.target.value)} />
+          <input type="number" placeholder='$ 0.00' className='form-control'onChange={(e) => setVuelto(e.target.value)} />
           <br/>
           <label>Metodo de Pago:</label>
-          <select id="metodoPago">
+          <select id="metodoPago" className='form-select'>
             {verMetodoPago.map(metodo => (
               <option key={metodo.Id_metodoPago} value={metodo.Id_metodoPago}>{metodo.tipo_metodoPago}</option>
             ))}
           </select>
           <br/>
           <label>Intereses</label>
-          <input type="number" onChange={(e) => setIntereses(e.target.value)} />
+          <input type="number" placeholder='% 0.00' className='form-control' onChange={(e) => setIntereses(e.target.value)} />
           <br/>
           <label><b>Cliente:</b></label>
-          <select id="cliente" onChange={(e)=>{seleccionarCliente(e)}}>
+          <select id="cliente" className='form-select' onChange={(e)=>{seleccionarCliente(e)}}>
+          <option value='' disabled selected>Seleccione el cliente</option>
               {verCliente.map(cliente => (
                   <option key={cliente.Id_cliente} value={cliente.Id_cliente}>{cliente.nombre_cliente}</option>
               ))}
           </select><br />
-          <h6>Límite de Crédito: {limiteCredito}</h6>
-          <h6> Crédito Actual: {creditoActaul}</h6>
-          <br/>
-          <label><b>CAMBIO:</b> ${cambio()}</label>
+          <h6>Límite de Crédito: {formatCurrency(limiteCredito)}</h6>
+          <h6> Crédito Actual: {formatCurrency(creditoActaul)}</h6>
+          <label>EFECTIVO</label>
+          <input  type="number" className='form-control' placeholder='$ 0.00' value={efectivo} onChange={(e) => setEfectivo(e.target.value)} />
+          <label>TARJETA</label>
+          <input  type="number" className='form-control' placeholder='$ 0.00' value={tarjeta} onChange={(e) => setTarjeta(e.target.value)} />
+          <label><b>CAMBIO: ${cambio()}</b></label><br />
+          <label><b>RESTANTE: ${restante()}</b></label>
         <br/>
-          <Button className="btn btn-primary" onClick={FinalizarVenta}>FINALIZAR VENTA</Button><br /><br />
+
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Button 
+        className="btn btn-primary" 
+        style={{ width: '400px', marginTop: '6px' }}  
+        onClick={FinalizarVenta}
+        >
+       FINALIZAR VENTA
+      </Button>
+    </div>
+       
 
 
 
@@ -489,7 +540,7 @@ const id_usuario = localStorage.getItem('idUsuario')
         <th scope="col">NOMBRE</th>
         <th scope="col">PRECIO</th>
         <th scope="col">TIPO VENTA</th>
-            
+        
       </tr>
     </thead>
     <tbody>
@@ -536,7 +587,7 @@ const id_usuario = localStorage.getItem('idUsuario')
                 <th scope="col">NOMBRE</th>
                 <th scope="col">PRECIO</th>
                 <th scope="col">TIPO VENTA</th>
-                <th scope="col">Eliminar</th>
+                <th scope="col">ELIMINAR</th>
               </tr>
             </thead>
             <tbody>
@@ -546,7 +597,6 @@ const id_usuario = localStorage.getItem('idUsuario')
                   <td>{producto.nombre_producto}</td>
                   <td>${producto.precioVenta}</td>
                   <td>{producto.tipo_venta}</td>
-
                   <td>
                     <button
                       type="button"
@@ -573,7 +623,7 @@ const id_usuario = localStorage.getItem('idUsuario')
       >
         <Contenido>
         <br /><br /><br />
-              <input value={buscar} onChange={buscador} type="text" placeholder='Busca un producto...' className='form-control' />
+              <input value={buscar} onChange={buscador}  type="text" placeholder='Busca un producto...' className='form-control' />
             <br />
              <Table striped bordered hover>
               <thead>
@@ -590,7 +640,7 @@ const id_usuario = localStorage.getItem('idUsuario')
               <tbody>
                 {buscar.length > 0 ?(
                     resultado.map((producto, index) => (
-                        <tr key={index}>
+                      <tr key={index}>
                         
                         <td>{producto.nombre_producto}</td>
                         <td>{producto.descripcion_producto}</td>
@@ -726,13 +776,13 @@ const id_usuario = localStorage.getItem('idUsuario')
           </Modal>
 
 
-
-      <Button onClick={handleShowModal} className='btn btn-success'>MOSTRAR TOTAL</Button><br /><br />
-      <Button onClick={handleShowModal2}className='btn btn-danger'>ELIMINAR ULTIMA VENTA</Button>---
-      <Button onClick={handleShowModal3}className='btn btn-light'>GUARDAR VENTA</Button>---
-      <Button onClick={handleShowModal4}className='btn btn-info'>VENTAS GUARDADAS</Button> --- 
+    <div className='botones-venta'>
+      <Button onClick={handleShowModal2}className='btn btn-danger'>ELIMINAR ULTIMA VENTA</Button>
+      <Button onClick={handleShowModal3}className='btn btn-light'>GUARDAR VENTA</Button>
+      <Button onClick={handleShowModal} className='btn btn-success'>MOSTRAR TOTAL</Button>
+      <Button onClick={handleShowModal4}className='btn btn-info'>VENTAS GUARDADAS</Button>
       <Button onClick={handleShowModal5}>REGISTRAR MOVIMIENTOS</Button>
-    
+    </div>
       </>
       )
     }

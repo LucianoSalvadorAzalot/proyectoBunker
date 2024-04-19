@@ -1,8 +1,9 @@
 #root {
-  max-width: 1280px;
+  /* max-width: 1280px; */
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   text-align: center;
+  width: 100%;
 }
 
 
@@ -49,3 +50,156 @@
 .cabeceraTabla{
   background-color: #8540f5 !important;
 }
+
+/* CORTE */
+
+.corte {
+  text-align: start;
+  background-color: rgb(42, 153, 27);
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 56px; 
+}
+
+.h3-corte{
+  color: white;
+  margin-left: 10px;
+}
+
+.h3{
+  text-align: start;
+  margin-top: 10px;
+}
+
+
+.table-container {
+  max-width: 600px; 
+  margin-left: 0; 
+}
+
+ 
+.content-wrapper {
+  display: flex;
+  overflow-x: auto;
+  margin-bottom: -17px;
+  max-width: 100%;
+} 
+
+.sales-container {
+  flex: 1;
+  margin-right: 20px; 
+} 
+
+.clients-container {
+  flex: 1;
+  margin-top: 1px;
+} 
+
+/* .calendario{
+  display: flex;
+  flex-direction: column; 
+  align-items: start; 
+  width: 400px;
+  left: 0;
+  margin: auto;
+  align-content: start;
+} */
+
+.btn-corte{
+  width: 200px;
+  margin-top: 10px;
+}
+
+
+/* Estilos para el botón del DatePicker */
+.btn-corte {
+  margin-left: 10px; /* Espaciado a la izquierda */
+  padding: 10px 20px; /* Espaciado interno */
+  font-size: 16px; /* Tamaño de la fuente */
+  background-color: #007bff; /* Color de fondo del botón */
+  color: #fff; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  cursor: pointer; /* Cursor al pasar sobre el botón */
+}
+
+.btn-corte:hover {
+  background-color: #0056b3; /* Cambio de color al pasar sobre el botón */
+}
+
+.lbl-corte{
+  font-size: 35px;
+}
+
+.btn-imprimir{
+  margin-left: 10px; /* Espaciado a la izquierda */
+  padding: 10px 20px; /* Espaciado interno */
+  font-size: 16px; /* Tamaño de la fuente */
+  background-color: #5e02fe; /* Color de fondo del botón */
+  color: #fff; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  cursor: pointer; /* Cursor al pasar sobre el botón */
+  margin-top: 10px;
+  width: 200px;
+}
+
+.btn-imprimir:hover{
+  background-color: #3b00a1; 
+}
+
+.custom-datepicker-wrapper {
+  width: 200px; /* Ajusta el ancho aquí */
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+
+.hover-button {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.hover-button:hover {
+  background-color: rgba(49, 46, 46, 0.55);
+  color: white;
+  text-decoration: none; /* Evita la subrayado del enlace al pasar el mouse */
+}
+
+.btn-custom{
+  color: white;
+  background-color: rgb(222, 63, 45);
+}
+
+.datos{
+  padding: 10px;
+  background-color:  #17a2b8;
+  width:  100%;
+  color: white;
+}
+
+.h3-ventas{
+  text-align: start;
+  background-color: #007bff;
+  width: 100%;
+  font-size: 15px;
+  color: white;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.h3-ventas h1{
+  margin-left: 10px;
+}
+
+.botones-venta{
+  display: flex;
+  gap: 10px;
+}
+
+.botones-venta .btn {
+  flex: 1;
+}
+
+
+
+

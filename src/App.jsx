@@ -1,14 +1,21 @@
 import  {useNavigate} from 'react-router-dom'
 import './App.css'
-import { Button } from 'react-bootstrap'
+import { Button, Navbar } from 'react-bootstrap'
 import  axios from 'axios'
 import { Modal} from 'react-bootstrap';
 import { MDBInputGroup } from 'mdb-react-ui-kit';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
+import logo from './assets/logo-blanco.png'
+import Container  from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import {NavLink} from 'react-bootstrap';
+import { Link } from 'react-router-dom'
 
 function App(  ) {
+
  
   const [cantidadPlataCaja, setCantidadPlataCaja] = useState("")
   const [showModal, setShowModal] = useState(false);
@@ -83,88 +90,58 @@ useEffect(() => {
 
   return (
     <>
-    <section >
-        <div >
-          <div className='row'>
-        
-            <div className='col'>
-                <Button onClick={() => navegar('/testVenta')}  variant="outline-primary"> Venta</Button>
-            </div>
-            <div className='col'>
-            <Button onClick={() => navegar('/clientes')} variant="outline-primary" >Clientes</Button>
-            </div>
-            <div className='col'>
-            <Button onClick={() => navegar('/productos')} variant="outline-primary" >Productos </Button>
-            </div>
-            <div className='col'>
-            <Button  onClick={() => navegar('/compra')} variant="outline-primary" >Compras</Button>
-            </div>
-            
-            {rolUsuario === 'admin' && (
-            <div className='col'>
-            <Button onClick={() => navegar('/usuarios')} variant="outline-primary">Usuarios</Button>
-            </div>
-            )}
+    <Navbar bg="dark" data-bs-theme="dark" expand="lg" style={{ width: "100vw", marginLeft: "-15px", marginRight: "-15px" }}>
+    <Container>
+    <Navbar.Brand href="" style={{ marginLeft: "-250px" }}>
+            <img src={logo}
+            height='30'
+            className='d-inline-block align-top' 
+            alt="logo" />
+          </Navbar.Brand>
 
+          <Nav className='me-auto' style={{margin: "auto"}}>
+          <Button onClick={() => navegar('/testVenta')}  className=' m-2' variant="outline-info">VENTAS</Button>
+            <Button onClick={() => navegar('/credito')} className=' m-2' variant="outline-info">CREDITOS</Button>
+            <Button onClick={() => navegar('/clientes')}  className=' m-2'variant="outline-info">CLIENTES</Button>
+            <Button onClick={() => navegar('/productos')}  className=' m-2'variant="outline-info">PRODUCTOS</Button>
+            <Button onClick={() => navegar('/compra')}   className=' m-2'variant="outline-info">COMPRA</Button>
             {rolUsuario === 'admin' && (
-            <div className='col'>
-            <Button onClick={() => navegar('/configuracion')} variant="outline-primary">Proveedores</Button>
-            </div>
-            )}
+               <Button onClick={() => navegar('/usuarios')}  className='m-2'variant="outline-info">USUARIOS</Button>
+            )} 
             {rolUsuario === 'admin' && (
-             <div className='col'>
-                <Button onClick={() => navegar('/metodoPago')} variant="outline-primary" >Metodo Pago</Button>
-              </div>
-            )}
-            <div className='col'>
-             <Button onClick={() => navegar('/credito')} variant="outline-primary">Creditos</Button>
-            </div>
-            {/* {rolUsuario === 'admin' && (
-              <div className='col-xl'>
-              <Button onClick={() => navegar('/corteV')} variant="outline-primary">Corte Venta</Button>
-              </div>
-             )} */}
-
-            {rolUsuario === 'admin' && (
-              <div className='col'>
-              <Button onClick={() => navegar('/corteC')} variant="outline-primary" >Corte Compra</Button>
-              </div>
-            )}
-         
-              <div className='col-xl'>
-              <Button onClick={() => navegar('/plataCaja')} variant="outline-primary" >Informe Usuarios</Button>
-              </div>
-            
-       
-
-            {rolUsuario === 'admin' && (
-                <div className='col'>
-                <Button onClick={() => navegar('/reportes')}  variant="outline-primary">Reportes</Button>
-                </div>
-            )}
-
-              <div className='col'>
-                <Button onClick={handleShowModal} variant="outline-danger">🕺 Salir</Button>
-              </div>
-
+             <Button onClick={() => navegar('/configuracion')} className='m-2' variant="outline-info">PROVEEDORES</Button>
+          )}
+           {rolUsuario === 'admin' && (
+              <Button onClick={() => navegar('/metodoPago')} className=' m-2' variant="outline-info">METODO PAGO</Button>
+           )}
+           {rolUsuario === 'admin' && (
+            <Button onClick={() => navegar('/corte2')} className=' m-2' variant="outline-info">CORTE</Button>
+           )}
+           {rolUsuario === 'admin' && (
+            <Button onClick={() => navegar('/corteC')} className=' m-2' variant="outline-info">CORTE COMPRA</Button>
+           )}
+           {rolUsuario === 'admin' && (
+            <Button onClick={() => navegar('/reportes')}  className=' m-2'variant="outline-info">REPORTES</Button>
+           )}
+           </Nav>
+           <Nav className='ms-auto'  style={{ marginRight: "-290px" }}>
+           <Button onClick={handleShowModal} >
+            <FontAwesomeIcon icon={faDoorOpen} style={{ marginRight: '5px', width: '30px' }}></FontAwesomeIcon>SALIR</Button>
+          </Nav>
+        </Container>
+      </Navbar>    
            
-          </div>
-          <div className='container'>
+          <div className='container-fluid datos'>
             <div className='row'>
               <div className='col'><h4>Usuario: {nombreUsuario}</h4></div>
               <div className='col'><h4>Sucursal: {nombreSucursal}</h4></div>
               <div className='col'><h4>Caja: {IdCaja}</h4></div>
-              <div className='col'><h5>Dia/Hora: {time.toLocaleString()}</h5></div>
-
-                              
+              <div className='col'><h5>Dia/Hora: {time.toLocaleString()}</h5></div>        
             </div>
-           
           </div>
           
-          
-        </div>
-        <hr />
-    </section>
+        
+   
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
             <Modal.Title>SALIR</Modal.Title>

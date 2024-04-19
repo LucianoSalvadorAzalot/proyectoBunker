@@ -4,7 +4,7 @@ import { Button, Form } from 'react-bootstrap';
 import * as XLSX from 'xlsx';
 import { MDBInputGroup } from 'mdb-react-ui-kit';
 import { DataContext } from '../context/DataContext.jsx';
-import Productos from '../components/Productos.jsx';
+import Productos from '../components/Productos.jsx'
 
 const NuevoProduct = ({ filename, sheetname }) => {
     const { sucursales } = useContext(DataContext);
@@ -23,15 +23,34 @@ const NuevoProduct = ({ filename, sheetname }) => {
     const [stock,setStock] = useState([])
     const [stockPlata, setStockPlata] = useState([])
 
-    useEffect(() => {
-        axios.get('http://localhost:3001/productos/')
-            .then((response) => {
-                setVer(response.data);
-            })
-            .catch((error) => {
-                console.log('Error al obtener los productos:', error);
-            });
-    }, [ver]);
+    const {productos} = useContext(DataContext)
+
+      
+  const[buscar,setBuscar] = useState();
+  const buscador = (e) => {
+    setBuscar(e.target.value)
+  }
+
+  let resultado = []
+  if (!buscar) {
+    resultado = stock
+  } else {
+    resultado = stock.filter((dato) =>
+      dato.nombre_producto.toLowerCase().includes(buscar.toLowerCase())
+    )
+  }
+
+
+
+    // useEffect(() => {
+    //     axios.get('http://localhost:3001/productos/')
+    //         .then((response) => {
+    //             setVer(response.data);
+    //         })
+    //         .catch((error) => {
+    //             console.log('Error al obtener los productos:', error);
+    //         });
+    // }, [ver]);
 
     const exportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(ver);
@@ -184,7 +203,7 @@ const NuevoProduct = ({ filename, sheetname }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {ver.map((val) => (
+                    {productos.map((val) => (
                         <tr key={val.Id_producto}>
                             <td>{val.Id_producto}</td>
                             <td>{val.nombre_producto}</td>
@@ -199,8 +218,10 @@ const NuevoProduct = ({ filename, sheetname }) => {
                     ))}
                 </tbody>
             </table>
+<hr />
 
-            <h2>STOCK DE PRODUCTOS</h2>
+            <h2 style={{marginTop: '60px'}}>STOCK DE PRODUCTOS</h2>
+            <input value={buscar} onChange={buscador} type="text" placeholder='Busca un producto...' className='form-control'/>
             <table className="table table-striped table-hover mt-5 shadow-lg">
                 <thead>
                     <tr className="table-info">
@@ -214,7 +235,7 @@ const NuevoProduct = ({ filename, sheetname }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {stock.map((val) => (
+                    {resultado.map((val) => (
                         <tr key={val.Id_stock}>
                             <td>{val.Id_producto}</td>
                             <td>{val.nombre_producto}</td>

@@ -13,6 +13,7 @@ export const metodoPago = "/metodoPago"
 export const credito= "/credito"
 export const testVenta = "/testVenta"
 export const plataEnCaja = "/plataCaja"
+export const corte2 = "/corte2"
 
 
 export const loginUsuario = "/loginUsuario"

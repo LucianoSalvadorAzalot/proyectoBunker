@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { departamentos, compra, corteV, cliente, productos, configuracion, nuevoProducto, editarProducto, eliminarProducto, app, importar, corteC, loginUsuario, usuarios, metodoPago, credito, testVenta, plataEnCaja} from './routes/routes.js'
+import { departamentos, compra, reportes, corte2,cliente, productos, configuracion, nuevoProducto, editarProducto, eliminarProducto, app, importar, corteC, loginUsuario, usuarios, metodoPago, credito, testVenta, plataEnCaja} from './routes/routes.js'
 import Clientes from './components/Clientes.jsx'
 import Compra from './components/Compras.jsx'
 import {Corte} from "./components/Corte.jsx"
@@ -25,6 +25,10 @@ import Creditos from './components/Credito.jsx'
 import TestVenta from './components/TestVenta.jsx'
 import PlataCaja from './components/PlataCaja.jsx'
 import { VentaProvider } from './context/VentaProvider.jsx'
+import Corte2 from './components/Corte2.jsx'
+import Reportes from './components/Reportes.jsx'
+
+
 
 
 
@@ -44,7 +48,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Route path="/" element={<Login/>}/>
                 <Route path={compra} element={<Compra/>}/>
                 <Route path={cliente} element={<Clientes/>}/>
-                <Route path={corteV} element={<Corte/>}/>
+                {/* <Route path={corteV} element={<Corte/>}/> */}
                 <Route path={corteC} element={<CorteCompra/>}/>
                 <Route path={configuracion} element={<Configuracion/>}/>
                 <Route path={loginUsuario} element={<LoginUsuario/>}/>
@@ -53,6 +57,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Route path={credito} element={<Creditos/>}/>
                 <Route path={testVenta} element={<TestVenta/>}/>
                 <Route path={plataEnCaja} element={<PlataCaja/>}/>
+                <Route path={corte2} element={<Corte2/>}/>
+                <Route path={reportes} element={<Reportes/>}/>
               
                 {/* PRODUCTOS */}
                 <Route path={productos} element={<Productos/>}/>

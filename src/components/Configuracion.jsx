@@ -104,8 +104,10 @@ export default function Configuracion() {
     return (
       <>
         <App/>
-        <br />
-        <h2>Proveedores</h2>
+      
+      <div className='h3-ventas'>
+        <h1>PROVEEDORES</h1>
+      </div>
         <br /><br />
       <div className="container-fluid">
         <div className="row">

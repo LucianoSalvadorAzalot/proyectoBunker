@@ -15,7 +15,7 @@ import {
   const[telefono_cliente,setTelefonoCliente] = useState();
   const[domicilio_cliente,setDomicilioCliente] = useState();
   const [montoCredito, setMontoCredito] = useState("")
-  const [LimiteCredito, setLimiteCredito] = useState(0)
+  const [LimiteCredito, setLimiteCredito] = useState("")
   const [editarCliente, setEditarCliente] = useState(false)  
   
   
@@ -33,10 +33,6 @@ import {
       dato.nombre_cliente.toLowerCase().includes(buscar.toLowerCase())
     )
   }
-
-
-
-
 
 
   /**********VER CLIENTES************/
@@ -150,8 +146,10 @@ const limpiarCampos = () =>{
   return (
     <>
       <App/>
-      <br />
-      <h2>CLIENTES</h2>
+      <div className='h3-ventas'>
+      <h1>CLIENTES</h1>
+      </div>
+      
       <h4>ADMINISTRACION DE CLIENTES</h4>
       <h4>
         Administra a todos los clientes de tu negocio(credito,facturacion,etc.)
@@ -187,7 +185,7 @@ const limpiarCampos = () =>{
           </MDBInputGroup>
 
           <MDBInputGroup  textBefore='💲' className='mb-3' textAfter='.00' >
-            <input className='form-control' type='number' placeholder="Credito"  value={LimiteCredito} onChange={(e) => setLimiteCredito(e.target.value)}/>
+            <input className='form-control' type='number' placeholder="Limite de credito"  value={LimiteCredito} onChange={(e) => setLimiteCredito(e.target.value)}/>
           </MDBInputGroup>
 
 

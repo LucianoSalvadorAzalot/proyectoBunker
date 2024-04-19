@@ -64,11 +64,12 @@ useEffect(() => {
 return (
   <>
   <App/>
-  
-       <br></br> 
-    <br />
+    
+    <div className='h3-ventas'>
+      <h1>COMPRAS</h1>
+    </div>
+
     <div className="container-fluid">
-    <h2>COMPRAS</h2>
 
           <MDBInputGroup textBefore='📋' className='mb-3' >
             <input className='form-control' type='text' placeholder="Descripcion" value={descripcion_compra} onChange={(e) => setDescripcionComra(e.target.value)} />

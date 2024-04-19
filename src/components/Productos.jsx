@@ -6,7 +6,10 @@ export default function Productos() {
   return (
     <>
       <App/>
-      <h1>Productos</h1>
+
+      <div className='h3-ventas'>
+      <h1>PRODUCTOS</h1>
+      </div>
       <section className='container-fluid'>
         <div >
           <div className='row'>

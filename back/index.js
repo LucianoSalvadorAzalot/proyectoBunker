@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
-const sequelize = new Sequelize('bunker', 'root', 'Lucho123', {
+const sequelize = new Sequelize('bunker3', 'root', 'Lola2201', {
     host: 'localhost',
     dialect: 'mysql'
 });
@@ -51,6 +51,7 @@ const plataEnCaja = require('./routes/plataEnCaja')
 const PlataLogin = require('./routes/PlataLogin')
 const Movimientos = require('./routes/Movimientos')
 const Caja = require('./routes/Caja')
+const Corte = require('./routes/Corte')
 
 
 
@@ -72,6 +73,7 @@ app.use('/', plataEnCaja)
 app.use('/', PlataLogin)
 app.use('/', Movimientos)
 app.use('/',Caja)
+app.use('/',Corte)
 
 
 

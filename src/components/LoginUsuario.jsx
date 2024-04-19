@@ -16,11 +16,17 @@ import {
     MDBInput,
   }
   from 'mdb-react-ui-kit';
+  import { faSackDollar } from '@fortawesome/free-solid-svg-icons';
+  import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
+  import logo from '../assets/logo-negro.png'
+  import logo2 from '../assets/logo-negro2.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const LoginUsuario = () => {
 
     const [nombre_usuario, setNombreUsuario] = useState("")
     const [clave_usuario, setClaveUsuario] = useState("")
+    const [usuarios, setUsuarios] = useState([])
     const [showModal, setShowModal] = useState(false);
     const [showModal1, setShowModal1] = useState(false);
     const [ingresoPlata, setIngresoPlata] = useState(0)
@@ -39,13 +45,19 @@ const LoginUsuario = () => {
     const Id_usuario = localStorage.getItem("idUsuario")
     const id_sucursal = localStorage.getItem("sucursalId");
 
+
     const regristroPlata = () =>{
         axios.post("http://localhost:3001/plataLogin/post",{
             Id_usuario : Id_usuario,
             Id_sucursal: id_sucursal,
             cantidadPlataLogin: ingresoPlata 
         }).then(()=>{
-            alert('todo ok')
+            Swal.fire({
+                title: " <strong>Ingreso Correcto!</strong>",
+                html: "<strong>Que tenga un dia exitoso!</strong>",
+                icon: 'success',
+                timer:3000
+              })       
             navigate('/testVenta')
         })
     }
@@ -114,8 +126,21 @@ const LoginUsuario = () => {
         verlasCajas()
     },[])
 
+
+    useEffect(() => {
+        const id_sucursal = localStorage.getItem("sucursalId");
+        axios.get(`http://localhost:3001/usuarios/sucursal/${id_sucursal}`)
+          .then(response => {
+            setUsuarios(response.data);
+          })
+          .catch(error => {
+            console.error('Error fetching sucursales:', error);
+          });
+      }, []);
+    
   return (
     <>
+    <img src={logo} alt="logo1" style={{ position: 'absolute', top: '15px', left: '15px', width: '130px' }} />
      <MDBContainer fluid>
 
         <MDBRow className='d-flex justify-content-center align-items-center h-100'>
@@ -124,18 +149,21 @@ const LoginUsuario = () => {
                 <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
                     <MDBCardBody className='p-5 w-100 d-flex flex-column'>
 
-                        <h2 className="fw-bold mb-2 text-center">Bunker</h2>
 
-                        <MDBInput wrapperClass='mb-4 w-100' label='Nombre Usuario' id='formControlLg' type='name' size="lg"  value={nombre_usuario} onChange={(e) => setNombreUsuario(e.target.value)}/>
-                        <MDBInput wrapperClass='mb-4 w-100' label='Clave Usuario' id='formControlLg' type='password' size="lg"  value={clave_usuario} onChange={(e) => setClaveUsuario(e.target.value)}/>
+                        <img src={logo2} alt="" />
+                        <br />
 
-                        <MDBBtn size='lg' onClick={ComprobarLogin}>
-                        Login
-                        </MDBBtn>
-
-                        <hr className="my-4" />
-
-
+                        <select className='form-select mb-4 w-100' value={nombre_usuario} onChange={(e) => setNombreUsuario(e.target.value)}>
+                    <option value='' disabled selected>Seleccione usuario</option>
+                    {usuarios.map(usuario => (
+                      <option key={usuario.Id_usuario} value={usuario.nombre_usuario}>{usuario.nombre_usuario}</option>
+                    ))}
+                  </select>      
+           
+                    <input className='form-control mb-4 w-100'  type='password' size="lg" placeholder='Ingrese clave...' value={clave_usuario} onChange={(e) => setClaveUsuario(e.target.value)}/>  
+                    <MDBBtn size='lg' onClick={ComprobarLogin}>
+                    INGRESAR
+                    </MDBBtn>
                     </MDBCardBody>
                 </MDBCard>
 
@@ -147,17 +175,17 @@ const LoginUsuario = () => {
 
     <Modal show={showModal1} onHide={handleCloseModal1}>
             <Modal.Header closeButton>
-              <Modal.Title>SALIR</Modal.Title>
+              <Modal.Title>SELECCIONE CAJA</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <h2 className="fw-bold mb-2 text-center">Bunker</h2>
+            <img src={logo2} alt="" style={{display: 'block', maxHeight: '100%', maxHeight: '100px', margin: '0 auto 20px', marginTop: '20px'}}  />
 
             <h3>CAJA:</h3><Form.Select key={Id_caja} aria-label="Caja" id="Caja">
                 {caja.map((caj)=>   
                     <option key={caj.Id_caja} value={caj.Id_caja}>{caj.Id_caja}</option>   
                 )}
             </Form.Select>
-
+        <br />
         <Button onClick={comprobarLoginCaja}>ELEGIR</Button>
 
             </Modal.Body>
@@ -172,15 +200,15 @@ const LoginUsuario = () => {
 
     <Modal show={showModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>
-              <Modal.Title>SALIR</Modal.Title>
+              <Modal.Title>DINERO EN CAJA</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <MDBInputGroup textBefore="💲" className="mb-3">
-                    <input className="form-control" type="text" placeholder="Ingrese la cantida de plata en caja" onChange={(e) => setIngresoPlata(e.target.value)}  />
-                </MDBInputGroup>
-              <Button  variant="outline-success" onClick={regristroPlata}>🕺 Ingresar</Button>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+           <FontAwesomeIcon icon={faSackDollar} style={{ color: '#0e7c15', fontSize:'2em' }}></FontAwesomeIcon>
+                    <input className="form-control" type="text" placeholder="INGRESE LA CANTIDAD DE DINERO EN CAJA" onChange={(e) => setIngresoPlata(e.target.value)}  style={{width: '350px', marginLeft: '10px'}}/>
+                    </div>
+              <Button  variant="outline-success" onClick={regristroPlata} style={{margin: '0 auto', marginTop: '10px'}}><FontAwesomeIcon icon={faDoorOpen} style={{fontSize: '30px'}}></FontAwesomeIcon> INGRESAR</Button>
             </Modal.Body>
-
             <Modal.Footer>
               <Button variant="danger" onClick={handleCloseModal} >
                 CERRAR

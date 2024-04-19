@@ -86,7 +86,11 @@ const Usuarios = () => {
 
   return (
     <>
-    <App/><br /><br />
+    <App/>
+
+    <div className="h3-ventas">
+        <h1>USUARIOS</h1>
+    </div>
        <div className="container-fluid">
        <MDBInputGroup textBefore='📋'   className='mb-3'>
             <input className='form-control' type='text' placeholder="Nombre" value={nombre_usuario} onChange={(e) => setNombreUsuario(e.target.value)}/>

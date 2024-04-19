@@ -12,6 +12,7 @@ const [clientes, setClientes] = useState([]);
 const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
 const [mostrarTablaCliente, setMostrarTablaCliente] = useState(false);
 const [detalleCliente, setDetalleCliente] = useState([]);
+const [montoCredito, setMontoCredito] = useState(0);
 
 
 const handleShowModal = () => setShowModal(true);
@@ -29,9 +30,10 @@ const sumarPreciosVenta = () => {
 
 
 
-const obtenerDetalleCliente = (Id_cliente) =>{
+const obtenerDetalleCliente = (Id_cliente, montoCredito) =>{
     axios.get(`http://localhost:3001/creditos/${Id_cliente}`).then((response) =>{
       setDetalleCliente(response.data);
+      setMontoCredito(montoCredito)
       console.log('xd',response.data)
     })
   }
@@ -44,15 +46,31 @@ const obtenerClientes = () => {
   });
 }
 
-
+const descVenta = (Id_cliente, precioTotal_venta, Id_venta) =>{
+  axios.put("http://localhost:3001/creditos/restarCredito",{
+    Id_cliente: Id_cliente,
+    montoCredito: precioTotal_venta
+  }).then(()=>{
+    axios.put(`http://localhost:3001/creditos/estadoCredito/${Id_venta}`).then(()=>{
+      alert('todo ok')
+    }).catch((error)=>{
+      console.log('error al cambiar el estado',error)
+    })
+  }).catch((error)=>{
+    console.log('error al descontar el credito', error)
+  })
+}
   useEffect(() => {
     obtenerClientes();
   }, []);
   return (
   <>
   <App/>
+  
+  <div className='h3-ventas'>
   <h1>CUENTAS CREDITOS CLIENTES</h1>
-      <Button onClick={handleShowModal}>Mostrar Clientes</Button>
+  </div>
+      <Button onClick={handleShowModal}>MOSTRAR CLIENTES</Button>
 
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
@@ -74,7 +92,7 @@ const obtenerClientes = () => {
                   <td>{cliente.Id_cliente}</td>
                   <td>{cliente.nombre_cliente}</td>
                   <td>{cliente.apellido_cliente}</td>
-                  <td><button onClick={()=>obtenerDetalleCliente(cliente.Id_cliente)} style={{ backgroundColor: '#244983', color: 'white' }}><FontAwesomeIcon icon={faEye}/></button></td>
+                  <td><button onClick={()=>obtenerDetalleCliente(cliente.Id_cliente, cliente.montoCredito)} style={{ backgroundColor: '#244983', color: 'white' }}><FontAwesomeIcon icon={faEye}/></button></td>
                 </tr>
               ))}
             </tbody>
@@ -92,7 +110,7 @@ const obtenerClientes = () => {
               <br />
               <h2>TOTAL DE CUENTA</h2>
            
-                <h3>${sumarPreciosVenta()}</h3>
+                <h3>${montoCredito}</h3>
               <Table striped bordered hover>
                 <thead>
                   <tr>
@@ -101,30 +119,42 @@ const obtenerClientes = () => {
                     <th>PRECIO UNITARIO</th>
                     <th>TOTAL DE LA VENTA</th>
                     <th>FECHA REGISTRO</th>
-                    <th>EMPLEADO QUE HIZO VENTA</th>                
+                    <th>EMPLEADO QUE HIZO VENTA</th>
+                    <th>ESTADO DE LA VENTA</th> 
+                    <th>ELIMINAR VENTA</th>               
                   </tr>
                 </thead>
                 <tbody>
                 {detalleCliente.map((dt)=>(
                   <tr key={dt.Id_credito}>
-                  <td>
+                 <td>
+                  <ul style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: 0 }}>
                     {dt.productos && Array.isArray(dt.productos) && dt.productos.map((producto) => (
-                      <li key={producto.Id_producto}>{producto.nombre_producto}</li>
+                      <li style={{marginLeft: '20px'}}   key={producto.Id_producto}>{producto.nombre_producto}</li>
                     ))}
+                  </ul>
                   </td>
-                  <td>
-                    {dt.productos.map((producto) => (
-                      <li key={producto.Id_producto}>Cantidad:  {parseInt(producto.CantidadVendida)}</li>
+
+                 <td>
+                  <ul style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: 0 }}>
+                    {dt.productos && Array.isArray(dt.productos) && dt.productos.map((producto) => (
+                      <li style={{marginLeft: '20px'}}   key={producto.Id_producto}>{producto.nombre_producto}</li>
                     ))}
-                  </td>    
+                  </ul>
+                  </td>
+
                   <td>
-                    {dt.productos.map((producto) => (
-                      <li key={producto.Id_producto}>precio producto: {producto.precioVenta}</li>
+                  <ul style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: 0 }}>
+                    {dt.productos && Array.isArray(dt.productos) && dt.productos.map((producto) => (
+                      <li style={{marginLeft: '20px'}}   key={producto.Id_producto}>{producto.nombre_producto}</li>
                     ))}
-                  </td>    
+                  </ul>
+                  </td>
                   <td>${dt.precioTotal_venta}</td>
                   <td>{new Date(dt.fecha_registro).toLocaleString()}</td>
                   <td>{dt.usuarios.nombre_usuario}</td>
+                  <td>{dt.tipoEstado}</td>
+                  <td><Button onClick={()=>descVenta(dt.cliente.Id_cliente, dt.precioTotal_venta, dt.Id_venta)}>PAGAR</Button></td>
                   </tr>
                 ))}
                 <tr>

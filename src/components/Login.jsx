@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; 
 import {
@@ -12,11 +12,14 @@ import {
 }
 from 'mdb-react-ui-kit';
 import Swal from 'sweetalert2'
+import logo2 from '../assets/logo-negro2.png'
+import logoblanco from '../assets/logo-blanco.png'
 
 const Login = () => {
   const navigate = useNavigate();
   const [nombre_sucursal, setNombre_sucursal] = useState("");
   const [clave, setClave] = useState("");
+  const [sucursales, setSucursales] = useState([]);
  
 
   const comprobarLogin = () => {
@@ -55,9 +58,29 @@ const Login = () => {
     });
   };
 
+  
+  useEffect(() => {
+    
+    document.body.style.backgroundColor = '#1F1F1F';
+
+    return () => {
+      document.body.style.backgroundColor = '';
+    };
+  }, []);
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/sucursales")
+      .then(response => {
+        setSucursales(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching sucursales:', error);
+      });
+  }, []);
+
   return (
     <>
-      
+      <img src={logoblanco} alt="loguito" style={{ position: 'absolute', top: '15px', left: '15px', width: '120px' }} />
       <MDBContainer fluid>
 
 <MDBRow className='d-flex justify-content-center align-items-center h-100'>
@@ -66,18 +89,21 @@ const Login = () => {
     <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
       <MDBCardBody className='p-5 w-100 d-flex flex-column'>
 
-        <h2 className="fw-bold mb-2 text-center">Bunker</h2>
+        <img src={logo2} alt="logo" />
+        <br />
 
-        <MDBInput wrapperClass='mb-4 w-100' label='Nombre Sucursal' id='formControlLg' type='name' size="lg" value={nombre_sucursal} onChange={(e) => setNombre_sucursal(e.target.value)}/>
-        <MDBInput wrapperClass='mb-4 w-100' label='Clave Sucursal' id='formControlLg' type='password' size="lg" value={clave} onChange={(e) => setClave(e.target.value)}/>
+        <select className='form-select mb-4 w-100' value={nombre_sucursal} onChange={(e) => setNombre_sucursal(e.target.value)}>
+                    <option value='' disabled selected>Seleccione sucursal</option>
+                    {sucursales.map(sucursal => (
+                      <option key={sucursal.Id_sucursal} value={sucursal.nombre_sucursal}>{sucursal.nombre_sucursal}</option>
+                    ))}
+                  </select>           
+      
+        <input className='form-control mb-4 w-100' placeholder='Ingrese clave...' type='password' size="lg" value={clave} onChange={(e) => setClave(e.target.value)}/>
 
         <MDBBtn size='lg' onClick={comprobarLogin}>
-          Login
+          INGRESAR
         </MDBBtn>
-
-        <hr className="my-4" />
-
-
       </MDBCardBody>
     </MDBCard>
 
