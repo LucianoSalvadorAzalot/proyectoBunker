@@ -43,7 +43,8 @@ const LoginUsuario = () => {
     const handleCloseModal1 = () => setShowModal1(false);
 
     const Id_usuario = localStorage.getItem("idUsuario")
-    const id_sucursal = localStorage.getItem("sucursalId");
+    const id_sucursal = localStorage.getItem("sucursalId"); 
+    const IdCaja = localStorage.getItem('idCaja')
 
 
     const regristroPlata = () =>{
@@ -71,7 +72,8 @@ const LoginUsuario = () => {
         axios.post("http://localhost:3001/loginUsuario/post", {
             nombre_usuario: nombre_usuario,
             clave_usuario: clave_usuario,
-            Id_sucursal: id_sucursal
+            Id_sucursal: id_sucursal,
+            Id_caja: IdCaja
         }) 
         .then((response) => {        
             const idUsuario = response.data.idUsuario;

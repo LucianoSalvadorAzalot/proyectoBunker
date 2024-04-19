@@ -82,7 +82,6 @@ const TestVenta = () => {
 
   const calcularTotal = () => {
     return listaCompras.reduce((total, item) => total + item.precioVenta * cantidadesVendidas[item.Id_producto], 0);
-
   };
 
   const SumarIntereses = () => { 
@@ -176,18 +175,15 @@ const TestVenta = () => {
     })
   };
 
-
-
    const traerUltimaVenta = async() =>{
      await axios.get(`http://localhost:3001/venta/UltimaVenta`).then((response)=>{
       setUltimaVenta( response.data[0].ultimoIdVenta)
+
       // console.log('aqui ta la ultima venta', ultimaVenta)
     }).catch((error)=>{
       console.log('no se puede traer la ultima venta',error)
     })
    }
-
-
 
   const traerUltimoDetalle = async  () =>{
     await  axios.get(`http://localhost:3001/detalleVenta/ultimoDetalle/${id_sucursal}`).then((response)=>{
@@ -281,8 +277,7 @@ const id_usuario = localStorage.getItem('idUsuario')
 
   
   const FinalizarVenta = () => {
-
-    
+   
     const Id_metodoPago = parseInt(document.getElementById("metodoPago").value); 
     if (Object.values(cantidadesVendidas).some(cantidad => cantidad > productos.cantidad_producto)) {
       alert('No puedes vender más productos de los que tienes en stock');
@@ -302,7 +297,6 @@ const id_usuario = localStorage.getItem('idUsuario')
       Id_cliente: document.getElementById("cliente").value,
       Id_sucursal: id_sucursal,
       Id_usuario: id_usuario
-
     }).then(() => {
       listaCompras.forEach((producto) => {
         axios.post("http://localhost:3001/detalleVenta/post", {
@@ -476,7 +470,7 @@ const id_usuario = localStorage.getItem('idUsuario')
 
           <Modal show={showModal2} onHide={handleCloseModal2}>
             <Modal.Header closeButton>
-              <Modal.Title>ULRIMA VENTA</Modal.Title>
+              <Modal.Title>ULTIMA VENTA</Modal.Title>
             </Modal.Header>   
             <Modal.Body>
          
