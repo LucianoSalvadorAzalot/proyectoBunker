@@ -101,7 +101,7 @@ const Login = () => {
 
                 <input className='form-control mb-4 w-100' placeholder='Ingrese clave...' type='password' size="lg" value={clave} onChange={(e) => setClave(e.target.value)} />
 
-                <MDBBtn size='lg' onClick={comprobarLogin} style={{backgroundColor: '#411e19', border: 'none'}}>
+                <MDBBtn size='lg' onClick={comprobarLogin} style={{backgroundColor: '#411e19', border: 'none', cursor: 'pointer'}}>
                   INGRESAR
                 </MDBBtn>
               </MDBCardBody>
